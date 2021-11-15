@@ -60,7 +60,7 @@ public class PokemonBase : ScriptableObject
 
     public int Attack
     {
-        get { return attack }
+        get { return attack; }
     }
 
     public int Defense

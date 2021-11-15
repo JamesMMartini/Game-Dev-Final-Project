@@ -6,8 +6,11 @@ using TMPro;
 
 public class MenuManager : MonoBehaviour
 {
-    public PokemonBase playerPokemon;
-    public PokemonBase enemyPokemon;
+    public PokemonBase playerBase;
+    public PokemonBase enemyBase;
+
+    Pokemon playerPokemon;
+    Pokemon enemyPokemon;
 
     public GameObject contButton;
     public TMP_Text text;
@@ -28,6 +31,10 @@ public class MenuManager : MonoBehaviour
 
     private void Awake()
     {
+        // Initialize the pokemon
+        playerPokemon = new Pokemon(playerBase, 10);
+        enemyPokemon = new Pokemon(enemyBase, 5);
+
         // Initialize the button array
         buttonArray[0] = new GameObject[2];
         buttonArray[0][0] = buttons[0];
@@ -115,4 +122,24 @@ public class MenuManager : MonoBehaviour
         buttonArray[row][col].GetComponent<Image>().color = selectedColor;
         buttonArray[row][col].GetComponentInChildren<TMP_Text>().color = Color.black;
     }
+}
+
+public class ButtonGrid
+{
+    public GameObject[] buttons;
+    int rows;
+
+    public ButtonGrid(GameObject[] newButtons, int numRows)
+    {
+        // Copy over the buttons
+        buttons = new GameObject[newButtons.Length];
+        for (int i = 0; i < buttons.Length; i++)
+            buttons[i] = newButtons[i];
+    }
+
+    //public GameObject[][] getButtonGrid()
+    //{
+    //    GameObject[][] buttonGrid = new GameObject[rows][];
+    //    int numPerRow = 
+    //}
 }

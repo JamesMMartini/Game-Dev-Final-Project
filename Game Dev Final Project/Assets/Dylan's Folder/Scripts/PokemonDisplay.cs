@@ -32,12 +32,19 @@ public class PokemonDisplay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Update Sprites
+        myfrontImage.sprite = currentPokemonBase.FrontSprite;
+        mybackImage.sprite = currentPokemonBase.BackSprite;
+        
         //We will set all the values in Update so we can switch out the Pokemon;
         myName.text = currentPokemon.Name;
         myLV.text = "LV. " + currentPokemon.Level;
-        mySpeed.text = currentPokemon.Speed.ToString();
-        myHP.text = currentPokemon.MaxHP.ToString();
-
+        mySpeed.text = "Speed: "+ currentPokemon.Speed;
+        myHP.text = "HP: " + currentPokemon.MaxHP;
+        myAttack.text = "Attack: " + currentPokemon.Attack;
+        myDefense.text = "Defense: " + currentPokemon.Defense;
+        mySpAttack.text = "SP Attack: " + currentPokemon.SpAttack;
+        myDefense.text = "SP Defense: " + currentPokemon.SpAttack;
 
     }
 }

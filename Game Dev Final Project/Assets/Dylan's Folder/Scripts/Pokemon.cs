@@ -18,9 +18,20 @@ public class Pokemon
         get { return _base.name; }
     }
 
+
     public int Level
     {
         get { return level; }
+    }
+
+    public Sprite FrontSprite
+    {
+        get { return FrontSprite; }
+    }
+
+    public Sprite BackSprite
+    {
+        get { return BackSprite; }
     }
 
     public int Attack

@@ -12,17 +12,22 @@ public class MenuManager : MonoBehaviour
     Pokemon playerPokemon;
     Pokemon enemyPokemon;
 
-    public GameObject contButton;
-    public TMP_Text text;
-    public GameObject buttonParent;
-    public GameObject[] buttons;
+    GameObject activeMenu;
+
+    [Header ("Menus")]
+    public GameObject narrationMenu;
+    public GameObject mainMenu;
+    public GameObject runMenu;    
+
+    [Header ("Colors")]
     public Color selectedColor;
     public Color defaultColor;
-
+    
     GameObject[][] buttonArray = new GameObject[2][];
 
+    [Header ("Menu Text")]
     public string intro;
-    public string mainMenu;
+    public string mainMenuText;
     public string move;
     public string[] menuOptions;
     public string[] moves;
@@ -34,23 +39,13 @@ public class MenuManager : MonoBehaviour
         // Initialize the pokemon
         playerPokemon = new Pokemon(playerBase, 10);
         enemyPokemon = new Pokemon(enemyBase, 5);
-
-        // Initialize the button array
-        buttonArray[0] = new GameObject[2];
-        buttonArray[0][0] = buttons[0];
-        buttonArray[0][1] = buttons[1];
-
-        buttonArray[1] = new GameObject[2];
-        buttonArray[1][0] = buttons[2];
-        buttonArray[1][1] = buttons[3];
-
-        //Set the initial menus and things
-        buttonParent.SetActive(false);
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        SwapMenu(narrationMenu);
+
         text.text = intro;
         contButton.SetActive(true);
     }
@@ -63,9 +58,8 @@ public class MenuManager : MonoBehaviour
             if (Input.GetKeyUp(KeyCode.Return))
             {
                 // Switch to the main menu
-                text.text = mainMenu;
+                text.text = mainMenuText;
                 contButton.SetActive(false);
-                buttonParent.SetActive(true);
 
                 // Set all the button texts
                 buttonArray[0][0].GetComponentInChildren<TMP_Text>().text = menuOptions[0];
@@ -76,7 +70,7 @@ public class MenuManager : MonoBehaviour
                 SelectButton(0, 0);
             }
         }
-        else if(text.text == mainMenu) // We're in the main menu
+        else if(text.text == mainMenuText) // We're in the main menu
         {
             if (Input.GetKeyUp(KeyCode.UpArrow))
             {
@@ -122,24 +116,9 @@ public class MenuManager : MonoBehaviour
         buttonArray[row][col].GetComponent<Image>().color = selectedColor;
         buttonArray[row][col].GetComponentInChildren<TMP_Text>().color = Color.black;
     }
-}
 
-public class ButtonGrid
-{
-    public GameObject[] buttons;
-    int rows;
-
-    public ButtonGrid(GameObject[] newButtons, int numRows)
+    void SwapMenu(GameObject newMenu)
     {
-        // Copy over the buttons
-        buttons = new GameObject[newButtons.Length];
-        for (int i = 0; i < buttons.Length; i++)
-            buttons[i] = newButtons[i];
-    }
 
-    //public GameObject[][] getButtonGrid()
-    //{
-    //    GameObject[][] buttonGrid = new GameObject[rows][];
-    //    int numPerRow = 
-    //}
+    }
 }

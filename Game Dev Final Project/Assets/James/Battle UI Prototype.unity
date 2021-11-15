@@ -1055,6 +1055,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 562ae5513aa6798498f2599502dd4b69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerBase: {fileID: 0}
+  enemyBase: {fileID: 0}
   contButton: {fileID: 88129099}
   text: {fileID: 1158874642}
   buttonParent: {fileID: 94505938}

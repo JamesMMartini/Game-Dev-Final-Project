@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class PlayerController : MonoBehaviour
 
     private bool isMoving;
     private Vector2 input;
+
 
     // Update is called once per frame
     private void Update()
@@ -64,6 +66,7 @@ public class PlayerController : MonoBehaviour
             if(Random.Range(1, 101) <= 10)
             {
                 Debug.Log("Encountered a wild Pokemon");
+                SceneManager.LoadScene("Battle UI Prototype");
             }
         }
     }

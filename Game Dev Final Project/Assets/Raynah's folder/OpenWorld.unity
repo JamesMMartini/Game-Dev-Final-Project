@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 109427070}
   - component: {fileID: 109427069}
   - component: {fileID: 109427068}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: TallGrass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -270,7 +270,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 832975623
-  m_SortingLayer: 3
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -616,7 +616,7 @@ GameObject:
   - component: {fileID: 790427062}
   - component: {fileID: 790427064}
   - component: {fileID: 790427063}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Solid Objects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -795,7 +795,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -147111343
-  m_SortingLayer: 1
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -988,7 +988,7 @@ MonoBehaviour:
   moveSpeed: 5
   solidObjectsLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 256
   grassLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 1024

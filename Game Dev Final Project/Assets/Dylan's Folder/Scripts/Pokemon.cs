@@ -12,6 +12,16 @@ public class Pokemon
         _base = pBase;
         level = pLevel;
     }
+    
+    public string Name
+    {
+        get { return _base.name; }
+    }
+
+    public int Level
+    {
+        get { return level; }
+    }
 
     public int Attack
     {

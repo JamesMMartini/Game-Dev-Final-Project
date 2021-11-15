@@ -31,6 +31,9 @@ public class PokemonDisplay : MonoBehaviour
     void Update()
     {
         //We will set all the values in Update so we can switch out the Pokemon;
+        myName.text = currentPokemon.Name;
+        myLV.text = "LV. " + currentPokemon.Level;
+        mySpeed.text = currentPokemon.Speed.ToString();
 
     }
 }

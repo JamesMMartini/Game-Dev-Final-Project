@@ -6,6 +6,8 @@ using TMPro;
 public class PokemonDisplay : MonoBehaviour
 {
     //This is the Pokemon we're displaying
+    public PokemonBase currentPokemonBase;
+
     public Pokemon currentPokemon;
 
     //Storing UI Gameobjects
@@ -24,7 +26,7 @@ public class PokemonDisplay : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        currentPokemon = new Pokemon(currentPokemonBase, 12);
     }
 
     // Update is called once per frame
@@ -34,6 +36,8 @@ public class PokemonDisplay : MonoBehaviour
         myName.text = currentPokemon.Name;
         myLV.text = "LV. " + currentPokemon.Level;
         mySpeed.text = currentPokemon.Speed.ToString();
+        myHP.text = currentPokemon.MaxHP.ToString();
+
 
     }
 }

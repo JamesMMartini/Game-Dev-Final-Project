@@ -6,6 +6,9 @@ using TMPro;
 
 public class MenuManager : MonoBehaviour
 {
+    public PokemonBase playerPokemon;
+    public PokemonBase enemyPokemon;
+
     public GameObject contButton;
     public TMP_Text text;
     public GameObject buttonParent;

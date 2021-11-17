@@ -25,10 +25,13 @@ public class MenuManager : MonoBehaviour
     
     GameObject[][] buttonArray = new GameObject[2][];
     GameObject activeMenu;
+    NarrationDialog currentDialog;
 
-    [Header ("Menu Text")]
-    public string intro;
-    public string mainMenuText;
+    [Header("Menu Text")]
+    public NarrationDialog intro;
+    public NarrationDialog mainMenuText;
+    public NarrationDialog runText;
+
     public string move;
     public string[] menuOptions;
     public string[] moves;
@@ -45,10 +48,10 @@ public class MenuManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SwapMenu(narrationMenu);
+        SwapMenu(narrationMenu, intro);
 
         // Set up the initial text and such
-        activeMenu.GetComponentInChildren<TMP_Text>().text = intro;
+        activeMenu.GetComponentInChildren<TMP_Text>().text = intro.Text;
     }
 
     // Update is called once per frame
@@ -58,8 +61,18 @@ public class MenuManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                // Switch to the main menu
-                SwapMenu(mainMenu);
+                if (currentDialog.Next.NarrationType == NarrationType.NewDialog)
+                {
+
+                }
+                else if (currentDialog.Next.NarrationType == NarrationType.MainMenu)
+                {
+                    SwapMenu(mainMenu, mainMenuText);
+                }
+                else if (currentDialog.Next.NarrationType == NarrationType.RunMenu)
+                {
+                    SwapMenu(runMenu, runText);
+                }
             }
         }
         else // We're in another menu
@@ -73,6 +86,13 @@ public class MenuManager : MonoBehaviour
                 ButtonPressed();
             }
         }
+    }
+
+    void AdvanceDialog(NarrationDialog newDialog)
+    {
+        currentDialog = newDialog;
+
+        activeMenu.GetComponentInChildren<TMP_Text>().text = currentDialog.Text;
     }
 
     void ButtonPressed()
@@ -95,7 +115,7 @@ public class MenuManager : MonoBehaviour
             }
             else if (selectedText == "Run")
             {
-                SwapMenu(runMenu);
+                SwapMenu(runMenu, runText);
             }
         }
         else if (activeMenu == runMenu)
@@ -111,7 +131,7 @@ public class MenuManager : MonoBehaviour
             }
             else if (selectedText == "No")
             {
-                SwapMenu(mainMenu);
+                SwapMenu(mainMenu, mainMenuText);
             }
         }
     }
@@ -169,7 +189,7 @@ public class MenuManager : MonoBehaviour
         buttonArray[row][col].GetComponentInChildren<TMP_Text>().color = Color.black;
     }
 
-    void SwapMenu(GameObject newMenu)
+    void SwapMenu(GameObject newMenu, NarrationDialog newDialog)
     {
         // Disable the existing menu
         if (activeMenu != null)
@@ -180,6 +200,10 @@ public class MenuManager : MonoBehaviour
 
         // Activate the new menu
         activeMenu.SetActive(true);
+
+        // Set the new text
+        currentDialog = newDialog;
+        activeMenu.transform.Find("Text").GetComponent<TMP_Text>().text = currentDialog.Text;
 
         if (activeMenu != narrationMenu) // We're not in the narration menu and need to set up a new menu
         {

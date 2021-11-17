@@ -1466,8 +1466,9 @@ MonoBehaviour:
   runMenu: {fileID: 1273478310}
   selectedColor: {r: 1, g: 1, b: 1, a: 1}
   defaultColor: {r: 0.6313726, g: 0.6313726, b: 0.6313726, a: 1}
-  intro: The battle begins
-  mainMenuText: What will you do?
+  intro: {fileID: 11400000, guid: 4ff3d9ef5ffbebb4ba78931660368c34, type: 2}
+  mainMenuText: {fileID: 11400000, guid: 617f84a3ec1d9c54e904ee55c0256a73, type: 2}
+  runText: {fileID: 11400000, guid: 14838eb575c97e6499b701a6bae9726a, type: 2}
   move: What move?
   menuOptions:
   - Fight

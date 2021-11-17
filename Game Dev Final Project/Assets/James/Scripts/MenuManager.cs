@@ -11,9 +11,7 @@ public class MenuManager : MonoBehaviour
 
     Pokemon playerPokemon;
     Pokemon enemyPokemon;
-
-    GameObject activeMenu;
-
+    
     [Header ("Menus")]
     public GameObject narrationMenu;
     public GameObject mainMenu;
@@ -24,6 +22,7 @@ public class MenuManager : MonoBehaviour
     public Color defaultColor;
     
     GameObject[][] buttonArray = new GameObject[2][];
+    GameObject activeMenu;
 
     [Header ("Menu Text")]
     public string intro;
@@ -46,61 +45,56 @@ public class MenuManager : MonoBehaviour
     {
         SwapMenu(narrationMenu);
 
-        text.text = intro;
-        contButton.SetActive(true);
+        // Set up the initial text and such
+        activeMenu.GetComponent<TMP_Text>().text = intro;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (contButton.activeSelf) // We're looking at narration text
+        if (activeMenu == narrationMenu) // We're in the narration menu
         {
-            if (Input.GetKeyUp(KeyCode.Return))
+            if (Input.GetKeyDown(KeyCode.Return))
             {
                 // Switch to the main menu
-                text.text = mainMenuText;
-                contButton.SetActive(false);
-
-                // Set all the button texts
-                buttonArray[0][0].GetComponentInChildren<TMP_Text>().text = menuOptions[0];
-                buttonArray[0][1].GetComponentInChildren<TMP_Text>().text = menuOptions[1];
-                buttonArray[1][0].GetComponentInChildren<TMP_Text>().text = menuOptions[2];
-                buttonArray[1][1].GetComponentInChildren<TMP_Text>().text = menuOptions[3];
-
-                SelectButton(0, 0);
+                SwapMenu(mainMenu);
             }
         }
-        else if(text.text == mainMenuText) // We're in the main menu
+        else if (activeMenu == mainMenu) // We're in the main menu
         {
-            if (Input.GetKeyUp(KeyCode.UpArrow))
-            {
-                if (selectedRow != 0)
-                {
-                    SelectButton(selectedRow - 1, selectedCol);
-                }
-            }
-            else if (Input.GetKeyUp(KeyCode.DownArrow))
-            {
-                if (selectedRow != 1)
-                {
-                    SelectButton(selectedRow + 1, selectedCol);
-                }
-            }
-            else if (Input.GetKeyUp(KeyCode.LeftArrow))
-            {
-                if (selectedCol != 0)
-                {
-                    SelectButton(selectedRow, selectedCol - 1);
-                }
-            }
-            else if (Input.GetKeyUp(KeyCode.RightArrow))
-            {
-                if (selectedCol != 1)
-                {
-                    SelectButton(selectedRow, selectedCol + 1);
-                }
-            }
+
         }
+        //else if(text.text == mainMenuText) // We're in the main menu
+        //{
+        //    if (Input.GetKeyUp(KeyCode.UpArrow))
+        //    {
+        //        if (selectedRow != 0)
+        //        {
+        //            SelectButton(selectedRow - 1, selectedCol);
+        //        }
+        //    }
+        //    else if (Input.GetKeyUp(KeyCode.DownArrow))
+        //    {
+        //        if (selectedRow != 1)
+        //        {
+        //            SelectButton(selectedRow + 1, selectedCol);
+        //        }
+        //    }
+        //    else if (Input.GetKeyUp(KeyCode.LeftArrow))
+        //    {
+        //        if (selectedCol != 0)
+        //        {
+        //            SelectButton(selectedRow, selectedCol - 1);
+        //        }
+        //    }
+        //    else if (Input.GetKeyUp(KeyCode.RightArrow))
+        //    {
+        //        if (selectedCol != 1)
+        //        {
+        //            SelectButton(selectedRow, selectedCol + 1);
+        //        }
+        //    }
+        //}
     }
 
     void SelectButton(int row, int col)
@@ -119,6 +113,22 @@ public class MenuManager : MonoBehaviour
 
     void SwapMenu(GameObject newMenu)
     {
+        // Disable the existing menu
+        if (activeMenu != null)
+            activeMenu.SetActive(false);
 
+        // Change the active menu
+        activeMenu = newMenu;
+
+        // Activate the new menu
+        activeMenu.SetActive(true);
+
+        if (activeMenu != narrationMenu) // We're not in the narration menu and need to set up a new menu
+        {
+            // Get all of the buttons
+            //activeMenu.GetComponent<GameObject>().transform.
+
+            //int firstArrayLength = 
+        }
     }
 }

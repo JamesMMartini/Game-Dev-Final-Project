@@ -1769,6 +1769,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0883989572a90d14f83a443f2e33d734, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentPokemonBase: {fileID: 11400000, guid: 37d3278026f5e1a40b95cdfe339815eb, type: 2}
   myfrontImage: {fileID: 1345541760}
   mybackImage: {fileID: 874880825}
   myName: {fileID: 173924541}

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
+using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
@@ -46,7 +48,7 @@ public class MenuManager : MonoBehaviour
         SwapMenu(narrationMenu);
 
         // Set up the initial text and such
-        activeMenu.GetComponent<TMP_Text>().text = intro;
+        activeMenu.GetComponentInChildren<TMP_Text>().text = intro;
     }
 
     // Update is called once per frame
@@ -60,48 +62,104 @@ public class MenuManager : MonoBehaviour
                 SwapMenu(mainMenu);
             }
         }
-        else if (activeMenu == mainMenu) // We're in the main menu
+        else // We're in another menu
         {
+            // Make sure to run the menu controls and allow the player to change the highlighted button
+            MenuControls();
 
+            //Check to see if the player has selected a button
+            if (Input.GetKeyUp(KeyCode.Return))
+            {
+                ButtonPressed();
+            }
         }
-        //else if(text.text == mainMenuText) // We're in the main menu
-        //{
-        //    if (Input.GetKeyUp(KeyCode.UpArrow))
-        //    {
-        //        if (selectedRow != 0)
-        //        {
-        //            SelectButton(selectedRow - 1, selectedCol);
-        //        }
-        //    }
-        //    else if (Input.GetKeyUp(KeyCode.DownArrow))
-        //    {
-        //        if (selectedRow != 1)
-        //        {
-        //            SelectButton(selectedRow + 1, selectedCol);
-        //        }
-        //    }
-        //    else if (Input.GetKeyUp(KeyCode.LeftArrow))
-        //    {
-        //        if (selectedCol != 0)
-        //        {
-        //            SelectButton(selectedRow, selectedCol - 1);
-        //        }
-        //    }
-        //    else if (Input.GetKeyUp(KeyCode.RightArrow))
-        //    {
-        //        if (selectedCol != 1)
-        //        {
-        //            SelectButton(selectedRow, selectedCol + 1);
-        //        }
-        //    }
-        //}
+    }
+
+    void ButtonPressed()
+    {
+        if (activeMenu == mainMenu)
+        {
+            GameObject selectedButton = buttonArray[selectedRow][selectedCol];
+            string selectedText = selectedButton.GetComponentInChildren<TMP_Text>().text;
+            if (selectedText == "Fight")
+            {
+
+            }
+            else if (selectedText == "Bag")
+            {
+
+            }
+            else if (selectedText == "Pokemon")
+            {
+
+            }
+            else if (selectedText == "Run")
+            {
+                SwapMenu(runMenu);
+            }
+        }
+        else if (activeMenu == runMenu)
+        {
+            GameObject selectedButton = buttonArray[selectedRow][selectedCol];
+            string selectedText = selectedButton.GetComponentInChildren<TMP_Text>().text;
+            if (selectedText == "Yes")
+            {
+                // Right now we unload this scene and load the open world scene, but in the long-term
+                // it might be better to load this scene as an additive scene and then just unload this scene
+                // so we don't need to worry about passing so much data back and forth
+                SceneManager.LoadScene("OpenWorld", LoadSceneMode.Single);
+            }
+            else if (selectedText == "No")
+            {
+                SwapMenu(mainMenu);
+            }
+        }
+    }
+
+    void MenuControls()
+    {
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            if (selectedRow != 0)
+            {
+                SelectButton(selectedRow - 1, selectedCol);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            if (selectedRow != 1)
+            {
+                SelectButton(selectedRow + 1, selectedCol);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            if (selectedCol != 0)
+            {
+                SelectButton(selectedRow, selectedCol - 1);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            if (selectedCol != 1)
+            {
+                SelectButton(selectedRow, selectedCol + 1);
+            }
+        }
     }
 
     void SelectButton(int row, int col)
     {
         // Deselect the previous button
-        buttonArray[selectedRow][selectedCol].GetComponent<Image>().color = defaultColor;
-        buttonArray[selectedRow][selectedCol].GetComponentInChildren<TMP_Text>().color = Color.white;
+        try
+        {
+            buttonArray[selectedRow][selectedCol].GetComponent<Image>().color = defaultColor;
+            buttonArray[selectedRow][selectedCol].GetComponentInChildren<TMP_Text>().color = Color.white;
+        }
+        catch (Exception ex)
+        {
+            // We don't need to do anything
+        }
 
         // Select the new button
         selectedRow = row;
@@ -125,10 +183,42 @@ public class MenuManager : MonoBehaviour
 
         if (activeMenu != narrationMenu) // We're not in the narration menu and need to set up a new menu
         {
-            // Get all of the buttons
-            //activeMenu.GetComponent<GameObject>().transform.
 
-            //int firstArrayLength = 
+            // Deselect the previous button
+            try
+            {
+                buttonArray[selectedRow][selectedCol].GetComponent<Image>().color = defaultColor;
+                buttonArray[selectedRow][selectedCol].GetComponentInChildren<TMP_Text>().color = Color.white;
+            }
+            catch (Exception ex)
+            {
+                // We don't need to do anything
+            }
+
+            // Get all of the buttons
+            GameObject buttonGroup = null;
+            foreach (Transform child in activeMenu.transform)
+            {
+                if (child.tag == "UI Button Group")
+                    buttonGroup = child.gameObject;
+            }
+
+            // Get the length of the two different arrays
+            int firstArrayLength = (buttonGroup.transform.childCount / 2) + (buttonGroup.transform.childCount % 2);
+            int secondArrayLength = buttonGroup.transform.childCount / 2;
+
+            // Populate the first array
+            buttonArray[0] = new GameObject[firstArrayLength];
+            for (int i = 0; i < buttonArray[0].Length; i++)
+                buttonArray[0][i] = buttonGroup.transform.GetChild(i).gameObject;
+
+            // Populate the second array
+            buttonArray[1] = new GameObject[secondArrayLength];
+            for (int i = 0; i < buttonArray[1].Length; i++)
+                buttonArray[1][i] = buttonGroup.transform.GetChild(firstArrayLength + i).gameObject;
+
+            // Select the first button
+            SelectButton(0, 0);
         }
     }
 }

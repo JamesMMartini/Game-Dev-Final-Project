@@ -13,6 +13,16 @@ public class Pokemon
         level = pLevel;
     }
     
+    public Sprite FrontSprite
+    {
+        get { return _base.FrontSprite; }
+    }
+
+    public Sprite BackSprite
+    {
+        get { return _base.BackSprite; }
+    }
+
     public string Name
     {
         get { return _base.name; }

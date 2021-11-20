@@ -11,8 +11,8 @@ public class PokemonDisplay : MonoBehaviour
     public Pokemon currentPokemon;
 
     //Storing UI Gameobjects
-    public SpriteRenderer myFrontImage;
-    public SpriteRenderer myBackImage;
+    public SpriteRenderer myfrontImage;
+    public SpriteRenderer mybackImage;
 
     public TextMeshPro myName;
     public TextMeshPro myLV;
@@ -32,19 +32,19 @@ public class PokemonDisplay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        //Update Sprites
+        myfrontImage.sprite = currentPokemonBase.FrontSprite;
+        mybackImage.sprite = currentPokemonBase.BackSprite;
+        
         //We will set all the values in Update so we can switch out the Pokemon;
-        myFrontImage.sprite = currentPokemon.FrontSprite;
-        myBackImage.sprite = currentPokemon.BackSprite;
-
         myName.text = currentPokemon.Name;
         myLV.text = "LV. " + currentPokemon.Level;
-        mySpeed.text = "Speed: " + currentPokemon.Speed;
+        mySpeed.text = "Speed: "+ currentPokemon.Speed;
         myHP.text = "HP: " + currentPokemon.MaxHP;
-        myAttack.text = "Attack: " + currentPokemon.MaxHP;
+        myAttack.text = "Attack: " + currentPokemon.Attack;
         myDefense.text = "Defense: " + currentPokemon.Defense;
         mySpAttack.text = "SP Attack: " + currentPokemon.SpAttack;
-        mySpDefense.text = "SP Defense: " + currentPokemon.SpDefense;
+        myDefense.text = "SP Defense: " + currentPokemon.SpAttack;
 
     }
 }

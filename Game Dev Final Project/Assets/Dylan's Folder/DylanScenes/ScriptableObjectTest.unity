@@ -157,7 +157,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 3.27, y: 0.88}
+  m_AnchoredPosition: {x: 2.06, y: 0.88}
   m_SizeDelta: {x: 20, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &173924541
@@ -243,7 +243,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -3.4323683, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
@@ -1770,8 +1770,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentPokemonBase: {fileID: 11400000, guid: 37d3278026f5e1a40b95cdfe339815eb, type: 2}
-  myFrontImage: {fileID: 1345541760}
-  myBackImage: {fileID: 874880825}
+  myfrontImage: {fileID: 1345541760}
+  mybackImage: {fileID: 874880825}
   myName: {fileID: 173924541}
   myLV: {fileID: 2056497645}
   myHP: {fileID: 1423835741}

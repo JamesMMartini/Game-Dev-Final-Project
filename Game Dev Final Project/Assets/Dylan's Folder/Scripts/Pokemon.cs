@@ -7,19 +7,28 @@ public class Pokemon
     PokemonBase _base;
     int level;
 
+    public int HP { get; set; }
+
     public List<Move> Moves { get; set; }
 
     public Pokemon(PokemonBase pBase, int pLevel)
     {
         _base = pBase;
         level = pLevel;
+        HP = _base.MaxHP;
 
+        //Generate Moves
         Moves = new List<Move>();
         foreach(var move in _base.LearnableMoves)
         {
             if(move.Level <= level)
             {
                 Moves.Add(new Move(move.Base));
+            }
+
+            if(Moves.Count >= 4)
+            {
+                break;
             }
         }
     }
@@ -43,16 +52,6 @@ public class Pokemon
     public int Level
     {
         get { return level; }
-    }
-
-    public Sprite FrontSprite
-    {
-        get { return FrontSprite; }
-    }
-
-    public Sprite BackSprite
-    {
-        get { return BackSprite; }
     }
 
     public int Attack

@@ -17,7 +17,8 @@ public class MenuManager : MonoBehaviour
     [Header ("Menus")]
     public GameObject narrationMenu;
     public GameObject mainMenu;
-    public GameObject runMenu;    
+    public GameObject runMenu;
+    public GameObject fightMenu;
 
     [Header ("Colors")]
     public Color selectedColor;
@@ -31,6 +32,7 @@ public class MenuManager : MonoBehaviour
     public NarrationDialog intro;
     public NarrationDialog mainMenuText;
     public NarrationDialog runText;
+    public NarrationDialog fightText;
 
     public string move;
     public string[] menuOptions;
@@ -81,7 +83,7 @@ public class MenuManager : MonoBehaviour
             MenuControls();
 
             //Check to see if the player has selected a button
-            if (Input.GetKeyUp(KeyCode.Return))
+            if (Input.GetKeyDown(KeyCode.Return))
             {
                 ButtonPressed();
             }
@@ -103,7 +105,7 @@ public class MenuManager : MonoBehaviour
             string selectedText = selectedButton.GetComponentInChildren<TMP_Text>().text;
             if (selectedText == "Fight")
             {
-
+                SwapMenu(fightMenu, fightText);
             }
             else if (selectedText == "Bag")
             {
@@ -147,7 +149,7 @@ public class MenuManager : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            if (selectedRow != 1)
+            if (selectedRow < buttonArray.Length - 1)
             {
                 SelectButton(selectedRow + 1, selectedCol);
             }
@@ -161,7 +163,7 @@ public class MenuManager : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            if (selectedCol != 1)
+            if (selectedCol < buttonArray[selectedRow].Length - 1)
             {
                 SelectButton(selectedRow, selectedCol + 1);
             }
@@ -205,20 +207,79 @@ public class MenuManager : MonoBehaviour
         currentDialog = newDialog;
         activeMenu.transform.Find("Text").GetComponent<TMP_Text>().text = currentDialog.Text;
 
-        if (activeMenu != narrationMenu) // We're not in the narration menu and need to set up a new menu
+        // Deselect the previous button
+        try
+        {
+            buttonArray[selectedRow][selectedCol].GetComponent<Image>().color = defaultColor;
+            buttonArray[selectedRow][selectedCol].GetComponentInChildren<TMP_Text>().color = Color.white;
+        }
+        catch (Exception ex)
+        {
+            // We don't need to do anything
+        }
+
+        if (activeMenu == narrationMenu)
         {
 
-            // Deselect the previous button
-            try
+        }
+        else if (activeMenu == fightMenu)
+        {
+            // Get all of the buttons
+            GameObject buttonGroup = null;
+            foreach (Transform child in activeMenu.transform)
             {
-                buttonArray[selectedRow][selectedCol].GetComponent<Image>().color = defaultColor;
-                buttonArray[selectedRow][selectedCol].GetComponentInChildren<TMP_Text>().color = Color.white;
-            }
-            catch (Exception ex)
-            {
-                // We don't need to do anything
+                if (child.tag == "UI Button Group")
+                    buttonGroup = child.gameObject;
             }
 
+            // Deactivate all of the button so we can only enable the ones necessary
+            foreach (Transform button in buttonGroup.transform)
+                button.gameObject.SetActive(false);
+
+            // Enable a button for every move the pokemon has and add the move's name
+            for (int i = 0; i < playerPokemon.Moves.Count; i++)
+            {
+                GameObject button = buttonGroup.transform.GetChild(i).gameObject;
+                button.SetActive(true);
+
+                button.GetComponentInChildren<TMP_Text>().text = playerPokemon.Moves[i].Base.MoveName;
+            }
+
+            // Set up the button array
+            if (playerPokemon.Moves.Count <= 2)
+            {
+                // Set up the array
+                buttonArray = new GameObject[1][];
+                buttonArray[0] = new GameObject[playerPokemon.Moves.Count];
+
+                // Populate the array
+                for (int i = 0; i < playerPokemon.Moves.Count; i++)
+                {
+                    buttonArray[0][i] = buttonGroup.transform.GetChild(i).gameObject;
+                }
+            }
+            else
+            {
+                // Set up the array
+                buttonArray = new GameObject[2][];
+                buttonArray[0] = new GameObject[2];
+                buttonArray[1] = new GameObject[playerPokemon.Moves.Count - 2];
+
+                // Populate the array
+                for (int i = 0; i < buttonArray.Length; i++)
+                {
+                    for (int j = 0; j < buttonArray[i].Length; j++)
+                    {
+                        buttonArray[i][j] = buttonGroup.transform.GetChild(i + j).gameObject;
+                    }
+                }
+            }
+
+            // Select the first button
+            SelectButton(0, 0);
+        }
+        else // We're not in the narration menu or a fight menu and need to set up a new menu
+        {
             // Get all of the buttons
             GameObject buttonGroup = null;
             foreach (Transform child in activeMenu.transform)

@@ -23,5 +23,6 @@ public enum NarrationType
 {
     NewDialog,
     MainMenu,
-    RunMenu
+    RunMenu,
+    FightMenu
 }

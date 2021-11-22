@@ -18,10 +18,7 @@ public class Pokemon
 
     public int Level
     {
-        get
-        {
-            return level;
-        }
+        get { return level; }
     }
 
     public int HP { get; set; }
@@ -30,7 +27,6 @@ public class Pokemon
 
     public void Init()
     {
-
         HP = _base.MaxHP;
 
         //Generate Moves
@@ -64,12 +60,6 @@ public class Pokemon
     public string Name
     {
         get { return _base.name; }
-    }
-
-
-    public int Level
-    {
-        get { return level; }
     }
 
     public int Attack

@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class PokemonParty : MonoBehaviour
 {
-    [SerializeField] List<Pokemon> partyList;
+   [SerializeField] public List<Pokemon> partyList;
 
-    public void Start()
+    private void Start()
     {
-        
-    }
-
-    public void Update()
-    {
-        
+        foreach(var pokemon in partyList)
+        {
+            pokemon.Init();
+        }
     }
 }

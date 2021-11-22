@@ -43,8 +43,8 @@ public class MenuManager : MonoBehaviour
     private void Awake()
     {
         // Initialize the pokemon
-        playerPokemon = new Pokemon(playerBase, 10);
-        enemyPokemon = new Pokemon(enemyBase, 5);
+        //playerPokemon = new Pokemon(playerBase, 10);
+       // enemyPokemon = new Pokemon(enemyBase, 5);
     }
 
     // Start is called before the first frame update

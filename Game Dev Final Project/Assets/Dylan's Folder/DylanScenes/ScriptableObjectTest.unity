@@ -1821,6 +1821,7 @@ MonoBehaviour:
   currentPokemon:
     _base: {fileID: 0}
     level: 0
+  playersParty: {fileID: 345885264}
   myfrontImage: {fileID: 1345541760}
   mybackImage: {fileID: 874880825}
   myName: {fileID: 173924541}

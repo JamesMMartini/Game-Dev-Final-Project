@@ -32,6 +32,11 @@ public class Pokemon
             }
         }
     }
+
+    public PokemonBase basePokemon
+    {
+        get { return _base; }
+    }
     
     public Sprite FrontSprite
     {

@@ -9,6 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b01e5793efba96c409bd9e7d67998c92, type: 3}
-  m_Name: Ember
+  m_Script: {fileID: 11500000, guid: 8d85ec2e5a75df54b88d6bad6f8ea021, type: 3}
+  m_Name: FightMenu
   m_EditorClassIdentifier: 
+  type: 3
+  text: What move?
+  previousAction: {fileID: 11400000, guid: 617f84a3ec1d9c54e904ee55c0256a73, type: 2}
+  nextAction: {fileID: 0}

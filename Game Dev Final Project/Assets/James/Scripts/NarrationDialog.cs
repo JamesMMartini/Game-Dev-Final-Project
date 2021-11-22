@@ -10,13 +10,13 @@ public class NarrationDialog : ScriptableObject
     [SerializeField] NarrationDialog previousAction;
     [SerializeField] NarrationDialog nextAction;
 
-    public NarrationType NarrationType { get { return type; } }
+    public NarrationType NarrationType { get { return type; } set { type = value; } }
 
-    public string Text { get { return text; } }
+    public string Text { get { return text; } set { text = value; } }
 
-    public NarrationDialog Previous { get { return previousAction; } }
+    public NarrationDialog Previous { get { return previousAction; } set { previousAction = value; } }
 
-    public NarrationDialog Next { get { return nextAction; } }
+    public NarrationDialog Next { get { return nextAction; } set { nextAction = value; } }
 }
 
 public enum NarrationType

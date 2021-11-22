@@ -73,7 +73,7 @@ public class MenuManager : MonoBehaviour
             {
                 if (currentDialog.Next.NarrationType == NarrationType.NewDialog)
                 {
-
+                    SwapMenu(narrationMenu, currentDialog.Next);
                 }
                 else if (currentDialog.Next.NarrationType == NarrationType.MainMenu)
                 {
@@ -144,6 +144,43 @@ public class MenuManager : MonoBehaviour
                 SwapMenu(mainMenu, mainMenuText);
             }
         }
+        else if (activeMenu == fightMenu)
+        {
+            ExecuteAction();
+        }
+    }
+
+    void ExecuteAction()
+    {
+        // Get the selected move name
+        string moveName = buttonArray[selectedRow][selectedCol].GetComponentInChildren<TMP_Text>().text;
+
+        // Get the move's data from the pokemon
+        Move selectedMove = null;
+        foreach (Move move in playerPokemon.Moves)
+        {
+            if (move.Base.name == moveName)
+                selectedMove = move;
+        }
+
+        // Create the next narration dialog
+        NarrationDialog actionDialog = ScriptableObject.CreateInstance<NarrationDialog>();
+        actionDialog.NarrationType = NarrationType.NewDialog;
+        actionDialog.Text = playerPokemon.Name + " uses " + selectedMove.Base.name;
+
+        // HERE WE NEED TO ACTUALLY EXECUTE THE DAMAGE BUT LET'S NOT WORRY ABOUT THAT FOR NOW
+
+        // Create the effectiveness dialog
+        NarrationDialog effectiveDialog = ScriptableObject.CreateInstance<NarrationDialog>();
+        effectiveDialog.NarrationType = NarrationType.NewDialog;
+        effectiveDialog.Text = "It's not at all effective.";
+        effectiveDialog.Previous = actionDialog;
+        effectiveDialog.Next = mainMenuText;
+
+        // Set the next on the action dialog
+        actionDialog.Next = effectiveDialog;
+
+        SwapMenu(narrationMenu, actionDialog);
     }
 
     void MenuControls()

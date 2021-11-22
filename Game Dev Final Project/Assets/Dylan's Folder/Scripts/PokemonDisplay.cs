@@ -10,6 +10,9 @@ public class PokemonDisplay : MonoBehaviour
 
     public Pokemon currentPokemon;
 
+    [SerializeField] PokemonParty playersParty;
+
+
     //Storing UI Gameobjects
     public SpriteRenderer myfrontImage;
     public SpriteRenderer mybackImage;
@@ -26,7 +29,7 @@ public class PokemonDisplay : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currentPokemon = new Pokemon(currentPokemonBase, 12);
+        currentPokemon = playersParty.partyList[0];
     }
 
     // Update is called once per frame

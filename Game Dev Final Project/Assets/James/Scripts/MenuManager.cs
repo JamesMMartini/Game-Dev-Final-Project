@@ -140,6 +140,17 @@ public class MenuManager : MonoBehaviour
 
     void MenuControls()
     {
+        // Check to see if they want to go back
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (currentDialog.Previous != null)
+            {
+                if (currentDialog.Previous == mainMenuText)
+                    SwapMenu(mainMenu, currentDialog.Previous);
+            }
+        }
+
+        // Handle moving selected buttons
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             if (selectedRow != 0)
@@ -287,6 +298,8 @@ public class MenuManager : MonoBehaviour
                 if (child.tag == "UI Button Group")
                     buttonGroup = child.gameObject;
             }
+
+            buttonArray = new GameObject[2][];
 
             // Get the length of the two different arrays
             int firstArrayLength = (buttonGroup.transform.childCount / 2) + (buttonGroup.transform.childCount % 2);

@@ -44,7 +44,7 @@ public class PokemonDisplay : MonoBehaviour
         myAttack.text = "Attack: " + currentPokemon.Attack;
         myDefense.text = "Defense: " + currentPokemon.Defense;
         mySpAttack.text = "SP Attack: " + currentPokemon.SpAttack;
-        myDefense.text = "SP Defense: " + currentPokemon.SpAttack;
+        mySpDefense.text = "SP Defense: " + currentPokemon.SpDefense;
 
     }
 }

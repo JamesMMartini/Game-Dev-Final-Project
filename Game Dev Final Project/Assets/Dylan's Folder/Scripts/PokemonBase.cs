@@ -102,6 +102,7 @@ public class LearnableMove
     }
 }
 
+
 public enum PokemonType
 {
     None,

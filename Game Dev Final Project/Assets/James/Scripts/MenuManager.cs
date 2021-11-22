@@ -11,6 +11,10 @@ public class MenuManager : MonoBehaviour
     public PokemonBase playerBase;
     public PokemonBase enemyBase;
 
+    [Header ("Sprite Objects")]
+    public GameObject playerSprite;
+    public GameObject enemySprite;
+
     Pokemon playerPokemon;
     Pokemon enemyPokemon;
     
@@ -45,6 +49,10 @@ public class MenuManager : MonoBehaviour
         // Initialize the pokemon
         playerPokemon = new Pokemon(playerBase, 10);
         enemyPokemon = new Pokemon(enemyBase, 5);
+
+        // Set the pokemon sprites in the scene
+        playerSprite.GetComponent<SpriteRenderer>().sprite = playerPokemon.BackSprite;
+        enemySprite.GetComponent<SpriteRenderer>().sprite = enemyPokemon.FrontSprite;
     }
 
     // Start is called before the first frame update

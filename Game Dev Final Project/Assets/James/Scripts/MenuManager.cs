@@ -8,15 +8,19 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
+    public GameObject gameManager;
+
+    PokemonParty pokemonParty;
+
     public PokemonBase playerBase;
     public PokemonBase enemyBase;
+
+    Pokemon playerPokemon;
+    public Pokemon enemyPokemon;
 
     [Header ("Sprite Objects")]
     public GameObject playerSprite;
     public GameObject enemySprite;
-
-    Pokemon playerPokemon;
-    Pokemon enemyPokemon;
     
     [Header ("Menus")]
     public GameObject narrationMenu;
@@ -44,20 +48,18 @@ public class MenuManager : MonoBehaviour
 
     int selectedRow, selectedCol;
 
-    private void Awake()
+    // Start is called before the first frame update
+    void Start()
     {
+        pokemonParty = gameManager.GetComponent<PokemonParty>();
+
         // Initialize the pokemon
-        playerPokemon = new Pokemon(playerBase, 10);
-        enemyPokemon = new Pokemon(enemyBase, 5);
+        playerPokemon = pokemonParty.partyList[0];
 
         // Set the pokemon sprites in the scene
         playerSprite.GetComponent<SpriteRenderer>().sprite = playerPokemon.BackSprite;
         enemySprite.GetComponent<SpriteRenderer>().sprite = enemyPokemon.FrontSprite;
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
         SwapMenu(narrationMenu, intro);
 
         // Set up the initial text and such
@@ -173,8 +175,8 @@ public class MenuManager : MonoBehaviour
         actionDialog.Text = playerPokemon.Name + " uses " + selectedMove.Base.name;
 
         // Now we need to calculate and apply the damage to the enemy pokemon
-        float damage = selectedMove.Base.Power - (enemyPokemon.Defense / 2);
-        float effectiveness = GetWeakness(enemyPokemon.basePokemon.Type1, selectedMove.Base.Type);
+        float damage = (selectedMove.Base.Power - (enemyPokemon.Defense / 2))/2;
+        float effectiveness = GetWeakness(enemyPokemon.Base.Type1, selectedMove.Base.Type);
         damage *= effectiveness;
 
         enemyPokemon.HP -= (int)damage;
@@ -238,8 +240,8 @@ public class MenuManager : MonoBehaviour
         actionDialog.Text = enemyPokemon.Name + " uses " + selectedMove.Base.name;
 
         // Now we need to calculate and apply the damage to the enemy pokemon
-        float damage = selectedMove.Base.Power - (playerPokemon.Defense / 2);
-        float effectiveness = GetWeakness(playerPokemon.basePokemon.Type1, selectedMove.Base.Type);
+        float damage = (selectedMove.Base.Power - (playerPokemon.Defense / 2))/2;
+        float effectiveness = GetWeakness(playerPokemon.Base.Type1, selectedMove.Base.Type);
         damage *= effectiveness;
 
         playerPokemon.HP -= (int)damage;

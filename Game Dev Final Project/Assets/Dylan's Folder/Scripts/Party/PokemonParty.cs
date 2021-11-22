@@ -10,6 +10,7 @@ public class PokemonParty : MonoBehaviour
     {
         foreach(var pokemon in partyList)
         {
+            Debug.Log(pokemon.Base.MaxHP);
             pokemon.Init();
         }
     }

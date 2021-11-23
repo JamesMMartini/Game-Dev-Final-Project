@@ -21,6 +21,10 @@ public class MenuManager : MonoBehaviour
     [Header ("Sprite Objects")]
     public GameObject playerSprite;
     public GameObject enemySprite;
+
+    [Header("Stat Bars")]
+    public StatBars playerStats;
+    public StatBars enemyStats;
     
     [Header ("Menus")]
     public GameObject narrationMenu;
@@ -55,6 +59,7 @@ public class MenuManager : MonoBehaviour
 
         // Initialize the pokemon
         playerPokemon = pokemonParty.partyList[0];
+        enemyPokemon.Init();
 
         // Set the pokemon sprites in the scene
         playerSprite.GetComponent<SpriteRenderer>().sprite = playerPokemon.BackSprite;
@@ -100,6 +105,8 @@ public class MenuManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Return))
             {
                 ButtonPressed();
+
+
             }
         }
     }
@@ -175,7 +182,7 @@ public class MenuManager : MonoBehaviour
         actionDialog.Text = playerPokemon.Name + " uses " + selectedMove.Base.name;
 
         // Now we need to calculate and apply the damage to the enemy pokemon
-        float damage = (selectedMove.Base.Power - (enemyPokemon.Defense / 2))/2;
+        float damage = (selectedMove.Base.Power - (enemyPokemon.Defense / 2)) / 2;
         float effectiveness = GetWeakness(enemyPokemon.Base.Type1, selectedMove.Base.Type);
         damage *= effectiveness;
 
@@ -221,6 +228,9 @@ public class MenuManager : MonoBehaviour
 
         // Set the next on the action dialog
         actionDialog.Next = effectiveDialog;
+
+        playerStats.UpdateBars(playerPokemon.HP, playerPokemon.Base.MaxHP);
+        enemyStats.UpdateBars(enemyPokemon.HP, enemyPokemon.Base.MaxHP);
 
         SwapMenu(narrationMenu, actionDialog);
     }
@@ -277,6 +287,9 @@ public class MenuManager : MonoBehaviour
 
         // Set the next on the action dialog
         actionDialog.Next = effectiveDialog;
+
+        playerStats.UpdateBars(playerPokemon.HP, playerPokemon.Base.MaxHP);
+        enemyStats.UpdateBars(enemyPokemon.HP, enemyPokemon.Base.MaxHP);
 
         SwapMenu(narrationMenu, actionDialog);
     }

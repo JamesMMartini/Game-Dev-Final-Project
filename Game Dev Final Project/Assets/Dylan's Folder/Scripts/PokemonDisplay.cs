@@ -10,6 +10,9 @@ public class PokemonDisplay : MonoBehaviour
 
     public Pokemon currentPokemon;
 
+    [SerializeField] PokemonParty playersParty;
+
+
     //Storing UI Gameobjects
     public SpriteRenderer myfrontImage;
     public SpriteRenderer mybackImage;
@@ -26,18 +29,25 @@ public class PokemonDisplay : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currentPokemon = new Pokemon(currentPokemonBase, 12);
+        currentPokemon = playersParty.partyList[0];
     }
 
     // Update is called once per frame
     void Update()
     {
+        //Update Sprites
+        myfrontImage.sprite = currentPokemonBase.FrontSprite;
+        mybackImage.sprite = currentPokemonBase.BackSprite;
+        
         //We will set all the values in Update so we can switch out the Pokemon;
         myName.text = currentPokemon.Name;
         myLV.text = "LV. " + currentPokemon.Level;
-        mySpeed.text = currentPokemon.Speed.ToString();
-        myHP.text = currentPokemon.MaxHP.ToString();
-
+        mySpeed.text = "Speed: "+ currentPokemon.Speed;
+        myHP.text = "HP: " + currentPokemon.MaxHP;
+        myAttack.text = "Attack: " + currentPokemon.Attack;
+        myDefense.text = "Defense: " + currentPokemon.Defense;
+        mySpAttack.text = "SP Attack: " + currentPokemon.SpAttack;
+        mySpDefense.text = "SP Defense: " + currentPokemon.SpDefense;
 
     }
 }

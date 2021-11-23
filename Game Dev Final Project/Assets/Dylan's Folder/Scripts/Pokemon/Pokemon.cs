@@ -2,25 +2,64 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class Pokemon
 {
-    PokemonBase _base;
-    int level;
+    [SerializeField] PokemonBase _base;
+    [SerializeField] int level;
 
-    public Pokemon(PokemonBase pBase, int pLevel)
+    public PokemonBase Base
     {
-        _base = pBase;
-        level = pLevel;
-    }
-    
-    public string Name
-    {
-        get { return _base.name; }
+        get
+        {
+            return _base;
+        }
     }
 
     public int Level
     {
         get { return level; }
+    }
+
+    public int HP { get; set; }
+
+    public List<Move> Moves { get; set; }
+
+    public void Init()
+    {
+        HP = _base.MaxHP;
+
+        //Generate Moves
+        Moves = new List<Move>();
+        foreach(var move in _base.LearnableMoves)
+        {
+            if(move.Level <= level)
+            {
+                Moves.Add(new Move(move.Base));
+            }
+
+            if(Moves.Count >= 4)
+            {
+                break;
+            }
+        }
+    }
+
+
+    
+    public Sprite FrontSprite
+    {
+        get { return _base.FrontSprite; }
+    }
+
+    public Sprite BackSprite
+    {
+        get { return _base.BackSprite; }
+    }
+
+    public string Name
+    {
+        get { return _base.name; }
     }
 
     public int Attack

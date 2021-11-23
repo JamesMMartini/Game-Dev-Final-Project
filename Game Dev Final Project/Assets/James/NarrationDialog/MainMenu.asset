@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d85ec2e5a75df54b88d6bad6f8ea021, type: 3}
+  m_Name: MainMenu
+  m_EditorClassIdentifier: 
+  type: 1
+  text: What will you do?
+  previousAction: {fileID: 11400000, guid: 4ff3d9ef5ffbebb4ba78931660368c34, type: 2}
+  nextAction: {fileID: 0}

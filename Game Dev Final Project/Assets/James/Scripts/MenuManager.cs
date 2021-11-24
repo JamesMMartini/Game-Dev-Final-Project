@@ -8,15 +8,23 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
+    public GameObject gameManager;
+
+    PokemonParty pokemonParty;
+
     public PokemonBase playerBase;
     public PokemonBase enemyBase;
+
+    Pokemon playerPokemon;
+    public Pokemon enemyPokemon;
 
     [Header ("Sprite Objects")]
     public GameObject playerSprite;
     public GameObject enemySprite;
 
-    Pokemon playerPokemon;
-    Pokemon enemyPokemon;
+    [Header("Stat Bars")]
+    public StatBars playerStats;
+    public StatBars enemyStats;
     
     [Header ("Menus")]
     public GameObject narrationMenu;
@@ -44,20 +52,19 @@ public class MenuManager : MonoBehaviour
 
     int selectedRow, selectedCol;
 
-    private void Awake()
+    // Start is called before the first frame update
+    void Start()
     {
+        pokemonParty = gameManager.GetComponent<PokemonParty>();
+
         // Initialize the pokemon
-        playerPokemon = new Pokemon(playerBase, 10);
-        enemyPokemon = new Pokemon(enemyBase, 5);
+        playerPokemon = pokemonParty.partyList[0];
+        enemyPokemon.Init();
 
         // Set the pokemon sprites in the scene
         playerSprite.GetComponent<SpriteRenderer>().sprite = playerPokemon.BackSprite;
         enemySprite.GetComponent<SpriteRenderer>().sprite = enemyPokemon.FrontSprite;
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
         SwapMenu(narrationMenu, intro);
 
         // Set up the initial text and such
@@ -83,6 +90,10 @@ public class MenuManager : MonoBehaviour
                 {
                     SwapMenu(runMenu, runText);
                 }
+                else if (currentDialog.Next.NarrationType == NarrationType.EnemyMove)
+                {
+                    EnemyAction();
+                }
             }
         }
         else // We're in another menu
@@ -94,6 +105,8 @@ public class MenuManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Return))
             {
                 ButtonPressed();
+
+
             }
         }
     }
@@ -168,17 +181,115 @@ public class MenuManager : MonoBehaviour
         actionDialog.NarrationType = NarrationType.NewDialog;
         actionDialog.Text = playerPokemon.Name + " uses " + selectedMove.Base.name;
 
-        // HERE WE NEED TO ACTUALLY EXECUTE THE DAMAGE BUT LET'S NOT WORRY ABOUT THAT FOR NOW
+        // Now we need to calculate and apply the damage to the enemy pokemon
+        float damage = (selectedMove.Base.Power - (enemyPokemon.Defense / 2)) / 2;
+        float effectiveness = GetWeakness(enemyPokemon.Base.Type1, selectedMove.Base.Type);
+        damage *= effectiveness;
+
+        enemyPokemon.HP -= (int)damage;
 
         // Create the effectiveness dialog
         NarrationDialog effectiveDialog = ScriptableObject.CreateInstance<NarrationDialog>();
         effectiveDialog.NarrationType = NarrationType.NewDialog;
-        effectiveDialog.Text = "It's not at all effective.";
+
+        if (effectiveness == 0.5f)
+            effectiveDialog.Text = "It's not very effective.";
+        else if (effectiveness == 2f)
+            effectiveDialog.Text = "It's very effective!";
+        else
+            effectiveDialog.Text = "It's mildly effective.";
         effectiveDialog.Previous = actionDialog;
         effectiveDialog.Next = mainMenuText;
 
+        // See if the battle has ended
+        if (playerPokemon.HP <= 0 || enemyPokemon.HP <= 0)
+        {
+            NarrationDialog endDialog = ScriptableObject.CreateInstance<NarrationDialog>();
+            endDialog.NarrationType = NarrationType.NewDialog;
+            effectiveDialog.Next = endDialog;
+            endDialog.Previous = effectiveDialog;
+            endDialog.Text = "It's over. Go home.";
+
+            SwapMenu(narrationMenu, endDialog);
+        }
+        else // Prep for the enemy's move
+        {
+            NarrationDialog enemyMove = ScriptableObject.CreateInstance<NarrationDialog>();
+            enemyMove.NarrationType = NarrationType.NewDialog;
+            enemyMove.Text = enemyPokemon.Name + " prepares to attack!";
+            enemyMove.Previous = effectiveDialog;
+            effectiveDialog.Next = enemyMove;
+
+            NarrationDialog enemyAttacks = ScriptableObject.CreateInstance<NarrationDialog>();
+            enemyAttacks.NarrationType = NarrationType.EnemyMove;
+            enemyAttacks.Previous = enemyMove;
+            enemyMove.Next = enemyAttacks;
+        }
+
         // Set the next on the action dialog
         actionDialog.Next = effectiveDialog;
+
+        playerStats.UpdateBars(playerPokemon.HP, playerPokemon.Base.MaxHP);
+        enemyStats.UpdateBars(enemyPokemon.HP, enemyPokemon.Base.MaxHP);
+
+        SwapMenu(narrationMenu, actionDialog);
+    }
+
+    void EnemyAction()
+    {
+        // Get a random int to select the move
+        System.Random rand = new System.Random();
+        int random = (int)(rand.NextDouble() * enemyPokemon.Moves.Count);
+
+        // Get the move's data from the pokemon
+        Move selectedMove = enemyPokemon.Moves[random];
+
+        // Create the next narration dialog
+        NarrationDialog actionDialog = ScriptableObject.CreateInstance<NarrationDialog>();
+        actionDialog.NarrationType = NarrationType.NewDialog;
+        actionDialog.Text = enemyPokemon.Name + " uses " + selectedMove.Base.name;
+
+        // Now we need to calculate and apply the damage to the enemy pokemon
+        float damage = (selectedMove.Base.Power - (playerPokemon.Defense / 2))/2;
+        float effectiveness = GetWeakness(playerPokemon.Base.Type1, selectedMove.Base.Type);
+        damage *= effectiveness;
+
+        playerPokemon.HP -= (int)damage;
+
+        // Create the effectiveness dialog
+        NarrationDialog effectiveDialog = ScriptableObject.CreateInstance<NarrationDialog>();
+        effectiveDialog.NarrationType = NarrationType.NewDialog;
+
+        if (effectiveness == 0.5f)
+            effectiveDialog.Text = "It's not very effective.";
+        else if (effectiveness == 2f)
+            effectiveDialog.Text = "It's very effective!";
+        else
+            effectiveDialog.Text = "It's mildly effective.";
+        effectiveDialog.Previous = actionDialog;
+        effectiveDialog.Next = mainMenuText;
+
+        // See if the battle has ended
+        if (playerPokemon.HP <= 0 || enemyPokemon.HP <= 0)
+        {
+            NarrationDialog endDialog = ScriptableObject.CreateInstance<NarrationDialog>();
+            endDialog.NarrationType = NarrationType.NewDialog;
+            effectiveDialog.Next = endDialog;
+            endDialog.Previous = effectiveDialog;
+            endDialog.Text = "It's over. Go home. You died.";
+
+            SwapMenu(narrationMenu, endDialog);
+        }
+        else // Go to the action menu
+        {
+            effectiveDialog.Next = mainMenuText;
+        }
+
+        // Set the next on the action dialog
+        actionDialog.Next = effectiveDialog;
+
+        playerStats.UpdateBars(playerPokemon.HP, playerPokemon.Base.MaxHP);
+        enemyStats.UpdateBars(enemyPokemon.HP, enemyPokemon.Base.MaxHP);
 
         SwapMenu(narrationMenu, actionDialog);
     }
@@ -363,5 +474,43 @@ public class MenuManager : MonoBehaviour
             // Select the first button
             SelectButton(0, 0);
         }
+    }
+
+    public float GetWeakness(PokemonType pokemonType, PokemonType moveType)
+    {
+        float strength = 1f;
+
+        switch (pokemonType)
+        {
+            case PokemonType.Fire:
+                if (moveType == PokemonType.Fire || moveType == PokemonType.Grass)
+                    strength = 0.5f;
+                else if (moveType == PokemonType.Water)
+                    strength = 2f;
+                break;
+            case PokemonType.Grass:
+                if (moveType == PokemonType.Water || moveType == PokemonType.Grass)
+                    strength = 0.5f;
+                else if (moveType == PokemonType.Fire)
+                    strength = 2f;
+                break;
+            case PokemonType.None:
+                strength = 1f;
+                break;
+            case PokemonType.Normal:
+                strength = 1f;
+                break;
+            case PokemonType.Water:
+                if (moveType == PokemonType.Fire || moveType == PokemonType.Water)
+                    strength = 0.5f;
+                else if (moveType == PokemonType.Grass)
+                    strength = 2f;
+                break;
+            default:
+                strength = 1f;
+                break;
+        }
+
+        return strength;
     }
 }

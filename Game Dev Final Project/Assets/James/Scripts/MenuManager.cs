@@ -240,6 +240,8 @@ public class MenuManager : MonoBehaviour
         // Get a random int to select the move
         System.Random rand = new System.Random();
         int random = (int)(rand.NextDouble() * enemyPokemon.Moves.Count);
+    
+        Debug.Log("test");
 
         // Get the move's data from the pokemon
         Move selectedMove = enemyPokemon.Moves[random];

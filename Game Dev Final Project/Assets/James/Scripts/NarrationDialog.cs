@@ -25,5 +25,6 @@ public enum NarrationType
     MainMenu,
     RunMenu,
     FightMenu,
-    EnemyMove
+    EnemyMove,
+    EndDialog
 }

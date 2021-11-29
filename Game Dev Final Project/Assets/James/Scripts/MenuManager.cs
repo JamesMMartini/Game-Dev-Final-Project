@@ -8,8 +8,6 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
-    public GameObject gameManager;
-
     PokemonParty pokemonParty;
 
     public PokemonBase playerBase;
@@ -55,7 +53,7 @@ public class MenuManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        pokemonParty = gameManager.GetComponent<PokemonParty>();
+        pokemonParty = GameManager.gameManager.GetComponent<PokemonParty>();
 
         // Initialize the pokemon
         playerPokemon = pokemonParty.partyList[0];

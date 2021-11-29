@@ -94,6 +94,10 @@ public class MenuManager : MonoBehaviour
                 {
                     EnemyAction();
                 }
+                else if (currentDialog.Next.NarrationType == NarrationType.EndDialog)
+                {
+                    SceneManager.LoadScene("OpenWorld");
+                }
             }
         }
         else // We're in another menu
@@ -210,6 +214,11 @@ public class MenuManager : MonoBehaviour
             endDialog.Previous = effectiveDialog;
             endDialog.Text = "It's over. Go home.";
 
+            NarrationDialog closeScene = ScriptableObject.CreateInstance<NarrationDialog>();
+            closeScene.NarrationType = NarrationType.EndDialog;
+            closeScene.Previous = endDialog;
+            endDialog.Next = closeScene;
+
             SwapMenu(narrationMenu, endDialog);
         }
         else // Prep for the enemy's move
@@ -240,8 +249,6 @@ public class MenuManager : MonoBehaviour
         // Get a random int to select the move
         System.Random rand = new System.Random();
         int random = (int)(rand.NextDouble() * enemyPokemon.Moves.Count);
-    
-        Debug.Log("test");
 
         // Get the move's data from the pokemon
         Move selectedMove = enemyPokemon.Moves[random];
@@ -279,6 +286,11 @@ public class MenuManager : MonoBehaviour
             effectiveDialog.Next = endDialog;
             endDialog.Previous = effectiveDialog;
             endDialog.Text = "It's over. Go home. You died.";
+
+            NarrationDialog closeScene = ScriptableObject.CreateInstance<NarrationDialog>();
+            closeScene.NarrationType = NarrationType.EndDialog;
+            closeScene.Previous = endDialog;
+            endDialog.Next = closeScene;
 
             SwapMenu(narrationMenu, endDialog);
         }

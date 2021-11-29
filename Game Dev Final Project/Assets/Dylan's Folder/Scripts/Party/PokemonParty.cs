@@ -6,6 +6,13 @@ public class PokemonParty : MonoBehaviour
 {
    [SerializeField] public List<Pokemon> partyList;
 
+    public GameObject gameManager;
+
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameManager);
+    }
+
     private void Start()
     {
         foreach(var pokemon in partyList)

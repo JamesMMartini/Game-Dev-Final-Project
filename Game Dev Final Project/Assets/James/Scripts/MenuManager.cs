@@ -8,8 +8,6 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
-    public GameObject gameManager;
-
     PokemonParty pokemonParty;
 
     public PokemonBase playerBase;
@@ -55,7 +53,7 @@ public class MenuManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        pokemonParty = gameManager.GetComponent<PokemonParty>();
+        pokemonParty = GameManager.gameManager.GetComponent<PokemonParty>();
 
         // Initialize the pokemon
         playerPokemon = pokemonParty.partyList[0];
@@ -93,6 +91,10 @@ public class MenuManager : MonoBehaviour
                 else if (currentDialog.Next.NarrationType == NarrationType.EnemyMove)
                 {
                     EnemyAction();
+                }
+                else if (currentDialog.Next.NarrationType == NarrationType.EndDialog)
+                {
+                    SceneManager.LoadScene("OpenWorld");
                 }
             }
         }
@@ -210,6 +212,11 @@ public class MenuManager : MonoBehaviour
             endDialog.Previous = effectiveDialog;
             endDialog.Text = "It's over. Go home.";
 
+            NarrationDialog closeScene = ScriptableObject.CreateInstance<NarrationDialog>();
+            closeScene.NarrationType = NarrationType.EndDialog;
+            closeScene.Previous = endDialog;
+            endDialog.Next = closeScene;
+
             SwapMenu(narrationMenu, endDialog);
         }
         else // Prep for the enemy's move
@@ -277,6 +284,11 @@ public class MenuManager : MonoBehaviour
             effectiveDialog.Next = endDialog;
             endDialog.Previous = effectiveDialog;
             endDialog.Text = "It's over. Go home. You died.";
+
+            NarrationDialog closeScene = ScriptableObject.CreateInstance<NarrationDialog>();
+            closeScene.NarrationType = NarrationType.EndDialog;
+            closeScene.Previous = endDialog;
+            endDialog.Next = closeScene;
 
             SwapMenu(narrationMenu, endDialog);
         }

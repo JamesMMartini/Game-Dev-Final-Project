@@ -12,6 +12,17 @@ public class PlayerController : MonoBehaviour
     private bool isMoving;
     private Vector2 input;
 
+    GameManager manager;
+
+    private void Start()
+    {
+        manager = GameManager.gameManager.GetComponent<GameManager>();
+
+        transform.position = manager.saveData.PlayerLocation;
+
+        manager.SaveData();
+    }
+
 
     // Update is called once per frame
     private void Update()
@@ -65,6 +76,8 @@ public class PlayerController : MonoBehaviour
         {
             if(Random.Range(1, 101) <= 10)
             {
+                manager.SaveData();
+                SceneManager.LoadScene("Battle UI Prototype");
                 Debug.Log("Encountered a wild Pokemon");
                 SceneManager.LoadScene("Battle UI Prototype");
             }

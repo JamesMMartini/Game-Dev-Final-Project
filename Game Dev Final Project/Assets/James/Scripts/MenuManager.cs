@@ -136,12 +136,14 @@ public class MenuManager : MonoBehaviour
         Vector3 enemyHealthStart = enemyStats.gameObject.transform.localPosition;
         Vector3 playerHealthStart = playerStats.gameObject.transform.localPosition;
         Vector3 mainBoxStart = transform.localPosition;
+        Vector3 enemyStart = enemySprite.transform.localPosition;
         while (t < 1.0f)
         {
             t += Time.deltaTime * speed;
             enemyStats.gameObject.transform.localPosition = Vector3.Lerp(enemyHealthStart, enemyHealthPos, t);
             playerStats.gameObject.transform.localPosition = Vector3.Lerp(playerHealthStart, playerHealthPos, t);
             transform.localPosition = Vector3.Lerp(mainBoxStart, mainBoxPos, t);
+            enemySprite.transform.localPosition = Vector3.Lerp(enemyStart, enemyPos, t);
             yield return null;
         }
 

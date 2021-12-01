@@ -9,12 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b01e5793efba96c409bd9e7d67998c92, type: 3}
-  m_Name: Ember
+  m_Script: {fileID: 11500000, guid: aa888d03023befc44b5465d4fc86d9b0, type: 3}
+  m_Name: SaveData1
   m_EditorClassIdentifier: 
-  moveName: 
-  description: 
-  type: 0
-  power: 45
-  accuracy: 100
-  pp: 20
+  playerLocation: {x: 0, y: 0, z: 0}
+  party: {fileID: 0}

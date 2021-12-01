@@ -49,11 +49,12 @@ public class MenuManager : MonoBehaviour
     public string[] moves;
 
     int selectedRow, selectedCol;
+    bool menuActive;
 
     // Start is called before the first frame update
     void Start()
     {
-        pokemonParty = GameManager.gameManager.GetComponent<PokemonParty>();
+        pokemonParty = GameManager.gameManager.GetComponent<GameManager>().party;
 
         // Initialize the pokemon
         playerPokemon = pokemonParty.partyList[0];
@@ -65,59 +66,78 @@ public class MenuManager : MonoBehaviour
 
         SwapMenu(narrationMenu, intro);
 
-        // Set up the initial text and such
-        activeMenu.GetComponentInChildren<TMP_Text>().text = intro.Text;
+        playerStats.UpdateBars(playerPokemon.HP, playerPokemon.Base.MaxHP);
+        enemyStats.UpdateBars(enemyPokemon.HP, enemyPokemon.Base.MaxHP);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (activeMenu == narrationMenu) // We're in the narration menu
+        if (menuActive)
         {
-            if (Input.GetKeyDown(KeyCode.Return))
+            if (activeMenu == narrationMenu) // We're in the narration menu
             {
-                if (currentDialog.Next.NarrationType == NarrationType.NewDialog)
+                if (Input.GetKeyDown(KeyCode.Return))
                 {
-                    SwapMenu(narrationMenu, currentDialog.Next);
-                }
-                else if (currentDialog.Next.NarrationType == NarrationType.MainMenu)
-                {
-                    SwapMenu(mainMenu, mainMenuText);
-                }
-                else if (currentDialog.Next.NarrationType == NarrationType.RunMenu)
-                {
-                    SwapMenu(runMenu, runText);
-                }
-                else if (currentDialog.Next.NarrationType == NarrationType.EnemyMove)
-                {
-                    EnemyAction();
-                }
-                else if (currentDialog.Next.NarrationType == NarrationType.EndDialog)
-                {
-                    SceneManager.LoadScene("OpenWorld");
+                    if (currentDialog.Next.NarrationType == NarrationType.NewDialog)
+                    {
+                        SwapMenu(narrationMenu, currentDialog.Next);
+                        //menuActive = false;
+                        //StartCoroutine(AdvanceDialog(currentDialog.Next));
+                    }
+                    else if (currentDialog.Next.NarrationType == NarrationType.MainMenu)
+                    {
+                        SwapMenu(mainMenu, mainMenuText);
+                    }
+                    else if (currentDialog.Next.NarrationType == NarrationType.RunMenu)
+                    {
+                        SwapMenu(runMenu, runText);
+                    }
+                    else if (currentDialog.Next.NarrationType == NarrationType.EnemyMove)
+                    {
+                        EnemyAction();
+                    }
+                    else if (currentDialog.Next.NarrationType == NarrationType.EndDialog)
+                    {
+                        GameManager.gameManager.GetComponent<GameManager>().party = pokemonParty;
+
+                        GameManager.gameManager.GetComponent<GameManager>().SaveData();
+
+                        SceneManager.LoadScene("OpenWorld");
+                    }
                 }
             }
-        }
-        else // We're in another menu
-        {
-            // Make sure to run the menu controls and allow the player to change the highlighted button
-            MenuControls();
-
-            //Check to see if the player has selected a button
-            if (Input.GetKeyDown(KeyCode.Return))
+            else // We're in another menu
             {
-                ButtonPressed();
+                // Make sure to run the menu controls and allow the player to change the highlighted button
+                MenuControls();
 
-
+                //Check to see if the player has selected a button
+                if (Input.GetKeyDown(KeyCode.Return))
+                {
+                    ButtonPressed();
+                }
             }
         }
     }
 
-    void AdvanceDialog(NarrationDialog newDialog)
+    IEnumerator AdvanceDialog(NarrationDialog newDialog)
     {
         currentDialog = newDialog;
 
         activeMenu.GetComponentInChildren<TMP_Text>().text = currentDialog.Text;
+
+        int textIndex = 0;
+        activeMenu.GetComponentInChildren<TMP_Text>().text = "";
+        while (textIndex < currentDialog.Text.Length)
+        {
+            activeMenu.GetComponentInChildren<TMP_Text>().text += currentDialog.Text[textIndex];
+
+            yield return new WaitForSeconds(0.02f);
+
+            textIndex++;
+        }
+        menuActive = true;
     }
 
     void ButtonPressed()
@@ -216,8 +236,6 @@ public class MenuManager : MonoBehaviour
             closeScene.NarrationType = NarrationType.EndDialog;
             closeScene.Previous = endDialog;
             endDialog.Next = closeScene;
-
-            SwapMenu(narrationMenu, endDialog);
         }
         else // Prep for the enemy's move
         {
@@ -289,8 +307,6 @@ public class MenuManager : MonoBehaviour
             closeScene.NarrationType = NarrationType.EndDialog;
             closeScene.Previous = endDialog;
             endDialog.Next = closeScene;
-
-            SwapMenu(narrationMenu, endDialog);
         }
         else // Go to the action menu
         {
@@ -319,28 +335,28 @@ public class MenuManager : MonoBehaviour
         }
 
         // Handle moving selected buttons
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetAxis("Vertical") > 0)
         {
             if (selectedRow != 0)
             {
                 SelectButton(selectedRow - 1, selectedCol);
             }
         }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        else if (Input.GetAxis("Vertical") < 0)
         {
             if (selectedRow < buttonArray.Length - 1)
             {
                 SelectButton(selectedRow + 1, selectedCol);
             }
         }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        else if (Input.GetAxis("Horizontal") < 0)
         {
             if (selectedCol != 0)
             {
                 SelectButton(selectedRow, selectedCol - 1);
             }
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        else if (Input.GetAxis("Horizontal") > 0)
         {
             if (selectedCol < buttonArray[selectedRow].Length - 1)
             {
@@ -399,7 +415,8 @@ public class MenuManager : MonoBehaviour
 
         if (activeMenu == narrationMenu)
         {
-
+            menuActive = false;
+            StartCoroutine(AdvanceDialog(currentDialog));
         }
         else if (activeMenu == fightMenu)
         {

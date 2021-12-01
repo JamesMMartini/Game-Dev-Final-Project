@@ -44,6 +44,14 @@ public class MenuManager : MonoBehaviour
     public NarrationDialog runText;
     public NarrationDialog fightText;
 
+    [Header("Object Locations/Lerp Info")]
+    public Vector3 playerHealthPos;
+    public Vector3 enemyHealthPos;
+    public Vector3 mainBoxPos;
+    public Vector3 enemyPos;
+    public float speed;
+
+    [Header("Move Settings")]
     public string move;
     public string[] menuOptions;
     public string[] moves;
@@ -64,7 +72,8 @@ public class MenuManager : MonoBehaviour
         playerSprite.GetComponent<SpriteRenderer>().sprite = playerPokemon.BackSprite;
         enemySprite.GetComponent<SpriteRenderer>().sprite = enemyPokemon.FrontSprite;
 
-        SwapMenu(narrationMenu, intro);
+        menuActive = false;
+        StartCoroutine(EnterObjects());
 
         playerStats.UpdateBars(playerPokemon.HP, playerPokemon.Base.MaxHP);
         enemyStats.UpdateBars(enemyPokemon.HP, enemyPokemon.Base.MaxHP);
@@ -119,6 +128,26 @@ public class MenuManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    IEnumerator EnterObjects()
+    {
+        float t = 0.0f;
+        Vector3 enemyHealthStart = enemyStats.gameObject.transform.localPosition;
+        Vector3 playerHealthStart = playerStats.gameObject.transform.localPosition;
+        Vector3 mainBoxStart = transform.localPosition;
+        while (t < 1.0f)
+        {
+            t += Time.deltaTime * speed;
+            enemyStats.gameObject.transform.localPosition = Vector3.Lerp(enemyHealthStart, enemyHealthPos, t);
+            playerStats.gameObject.transform.localPosition = Vector3.Lerp(playerHealthStart, playerHealthPos, t);
+            transform.localPosition = Vector3.Lerp(mainBoxStart, mainBoxPos, t);
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(0.25f);
+
+        SwapMenu(narrationMenu, intro);
     }
 
     IEnumerator AdvanceDialog(NarrationDialog newDialog)

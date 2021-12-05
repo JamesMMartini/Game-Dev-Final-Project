@@ -126,7 +126,6 @@ public class MenuManager : MonoBehaviour
                     else if (currentDialog.Next.NarrationType == NarrationType.EndDialog)
                     {
                         GameManager.gameManager.GetComponent<GameManager>().party = pokemonParty;
-
                         GameManager.gameManager.GetComponent<GameManager>().SaveData();
 
                         SceneManager.LoadScene("OpenWorld");
@@ -271,6 +270,9 @@ public class MenuManager : MonoBehaviour
                 // Right now we unload this scene and load the open world scene, but in the long-term
                 // it might be better to load this scene as an additive scene and then just unload this scene
                 // so we don't need to worry about passing so much data back and forth
+                GameManager.gameManager.GetComponent<GameManager>().party = pokemonParty;
+                GameManager.gameManager.GetComponent<GameManager>().SaveData();
+
                 SceneManager.LoadScene("OpenWorld", LoadSceneMode.Single);
             }
             else if (selectedText == "No")
@@ -303,11 +305,13 @@ public class MenuManager : MonoBehaviour
         actionDialog.Text = playerPokemon.Name + " uses " + selectedMove.Base.name;
 
         // Now we need to calculate and apply the damage to the enemy pokemon
-        float damage = (selectedMove.Base.Power - (enemyPokemon.Defense / 2)) / 2;
+        //float damage = (selectedMove.Base.Power - (enemyPokemon.Defense / 2)) / 2;
         float effectiveness = GetWeakness(enemyPokemon.Base.Type1, selectedMove.Base.Type);
-        damage *= effectiveness;
+        //damage *= effectiveness;
 
-        enemyPokemon.HP -= (int)damage;
+        enemyPokemon.HP -= CalculateDamage(selectedMove, enemyPokemon, playerPokemon, effectiveness);
+
+        //enemyPokemon.HP -= (int)damage;
 
         // Create the effectiveness dialog
         NarrationDialog effectiveDialog = ScriptableObject.CreateInstance<NarrationDialog>();
@@ -374,11 +378,13 @@ public class MenuManager : MonoBehaviour
         actionDialog.Text = enemyPokemon.Name + " uses " + selectedMove.Base.name;
 
         // Now we need to calculate and apply the damage to the enemy pokemon
-        float damage = (selectedMove.Base.Power - (playerPokemon.Defense / 2))/2;
+        //float damage = (selectedMove.Base.Power - (playerPokemon.Defense / 2))/2;
         float effectiveness = GetWeakness(playerPokemon.Base.Type1, selectedMove.Base.Type);
-        damage *= effectiveness;
+        //damage *= effectiveness;
 
-        playerPokemon.HP -= (int)damage;
+        playerPokemon.HP -= CalculateDamage(selectedMove, playerPokemon, enemyPokemon, effectiveness);
+
+        //playerPokemon.HP -= (int)damage;
 
         // Create the effectiveness dialog
         NarrationDialog effectiveDialog = ScriptableObject.CreateInstance<NarrationDialog>();
@@ -640,5 +646,13 @@ public class MenuManager : MonoBehaviour
         }
 
         return strength;
+    }
+
+    int CalculateDamage(Move selectedMove, Pokemon defendingPokemon, Pokemon attackingPokemon, float effectiveness)
+    {
+        float damage = (selectedMove.Base.Power * (attackingPokemon.Attack / defendingPokemon.Defense)) * (attackingPokemon.Attack / 100) + 5;
+        damage *= effectiveness;
+
+        return (int)damage;
     }
 }

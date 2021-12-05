@@ -19,6 +19,7 @@ public class MenuManager : MonoBehaviour
     [Header ("Sprite Objects")]
     public GameObject playerSprite;
     public GameObject enemySprite;
+    public GameObject trainerSprite;
 
     [Header("Stat Bars")]
     public StatBars playerStats;
@@ -43,12 +44,15 @@ public class MenuManager : MonoBehaviour
     public NarrationDialog mainMenuText;
     public NarrationDialog runText;
     public NarrationDialog fightText;
+    public NarrationDialog enterPokemon;
 
     [Header("Object Locations/Lerp Info")]
     public Vector3 playerHealthPos;
     public Vector3 enemyHealthPos;
     public Vector3 mainBoxPos;
     public Vector3 enemyPos;
+    public Vector3 playerPos;
+    public Vector3 pokemonOffscreen;
     public float speed;
 
     [Header("Move Settings")]
@@ -93,6 +97,19 @@ public class MenuManager : MonoBehaviour
                         SwapMenu(narrationMenu, currentDialog.Next);
                         //menuActive = false;
                         //StartCoroutine(AdvanceDialog(currentDialog.Next));
+                    }
+                    else if (currentDialog.Next.NarrationType == NarrationType.SelectPokemon)
+                    {
+                        // Create a new narration dialog for this
+                        NarrationDialog newDialog = ScriptableObject.CreateInstance<NarrationDialog>();
+                        newDialog.NarrationType = NarrationType.SelectPokemon;
+                        newDialog.Next = currentDialog.Next.Next;
+                        newDialog.Previous = currentDialog;
+                        newDialog.Text = playerPokemon.Name + currentDialog.Next.Text;
+
+                        // Swap the menus and the pokemon
+                        SwapMenu(narrationMenu, newDialog);
+                        StartCoroutine(SwapPokemon());
                     }
                     else if (currentDialog.Next.NarrationType == NarrationType.MainMenu)
                     {
@@ -168,6 +185,57 @@ public class MenuManager : MonoBehaviour
 
             textIndex++;
         }
+        menuActive = true;
+    }
+
+    IEnumerator SwapPokemon()
+    {
+        menuActive = false; // Scattering these lines around to make sure that you can't advance the screen before the pokemon finishes swapping
+
+        // Make sure the pokemon is out of frame
+        float t = 0.0f;
+        Vector3 pokemonStart = playerSprite.transform.localPosition;
+        while (t < 1.0f)
+        {
+            menuActive = false;
+
+            t += Time.deltaTime * speed * 2;
+            playerSprite.transform.localPosition = Vector3.Lerp(pokemonStart, pokemonOffscreen, t);
+            yield return null;
+        }
+
+        // Move the trainer on screen
+        t = 0.0f;
+        Vector3 trainerStart = trainerSprite.transform.localPosition;
+        while (t < 1.0f)
+        {
+            menuActive = false;
+
+            t += Time.deltaTime * speed;
+            trainerSprite.transform.localPosition = Vector3.Lerp(trainerStart, playerPos, t);
+            yield return null;
+        }
+
+        menuActive = false;
+        yield return new WaitForSeconds(1f);
+        menuActive = false;
+
+        // SWAP THE POKEMON SPRITE WHEN IMPLEMENTED
+
+        // Move the trainer off screen and pokemon on screen
+        t = 0.0f;
+        trainerStart = trainerSprite.transform.localPosition;
+        pokemonStart = playerSprite.transform.localPosition;
+        while (t < 1.0f)
+        {
+            menuActive = false;
+
+            t += Time.deltaTime * speed * 2;
+            trainerSprite.transform.localPosition = Vector3.Lerp(trainerStart, pokemonOffscreen, t);
+            playerSprite.transform.localPosition = Vector3.Lerp(pokemonStart, playerPos, t);
+            yield return null;
+        }
+
         menuActive = true;
     }
 

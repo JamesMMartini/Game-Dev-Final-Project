@@ -983,7 +983,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   partyPokemon:
     _base: {fileID: 11400000, guid: 28855121f6a87194cabc24cb97a163e0, type: 2}
-    level: 25
+    level: 74
   textName: {fileID: 1047334211}
   textHP: {fileID: 1249188070}
   textLV: {fileID: 1674530657}
@@ -1852,7 +1852,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   partyPokemon:
     _base: {fileID: 11400000, guid: 28855121f6a87194cabc24cb97a163e0, type: 2}
-    level: 25
+    level: 5
   textName: {fileID: 1113562825}
   textHP: {fileID: 2002518307}
   textLV: {fileID: 688252421}
@@ -5021,7 +5021,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   partyPokemon:
     _base: {fileID: 11400000, guid: 28855121f6a87194cabc24cb97a163e0, type: 2}
-    level: 25
+    level: 15
   textName: {fileID: 1864174301}
   textHP: {fileID: 302704280}
   textLV: {fileID: 1237343650}
@@ -5405,7 +5405,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   partyPokemon:
     _base: {fileID: 11400000, guid: 28855121f6a87194cabc24cb97a163e0, type: 2}
-    level: 25
+    level: 34
   textName: {fileID: 1035341776}
   textHP: {fileID: 1121052503}
   textLV: {fileID: 559388276}
@@ -5467,7 +5467,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   partyPokemon:
     _base: {fileID: 11400000, guid: 28855121f6a87194cabc24cb97a163e0, type: 2}
-    level: 25
+    level: 10
   textName: {fileID: 1522226184}
   textHP: {fileID: 1518968731}
   textLV: {fileID: 1559891135}

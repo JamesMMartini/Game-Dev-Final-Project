@@ -1132,7 +1132,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -407.9, y: -90.2}
+  m_AnchoredPosition: {x: -1378, y: -90.2}
   m_SizeDelta: {x: 400, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &608492871
@@ -2203,7 +2203,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -236.71425}
+  m_AnchoredPosition: {x: -2089, y: -236.71425}
   m_SizeDelta: {x: 1280, y: 246.5716}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &994462872
@@ -2218,7 +2218,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 562ae5513aa6798498f2599502dd4b69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 1363104150}
   playerBase: {fileID: 11400000, guid: 37d3278026f5e1a40b95cdfe339815eb, type: 2}
   enemyBase: {fileID: 11400000, guid: 28855121f6a87194cabc24cb97a163e0, type: 2}
   enemyPokemon:
@@ -2238,6 +2237,11 @@ MonoBehaviour:
   mainMenuText: {fileID: 11400000, guid: 617f84a3ec1d9c54e904ee55c0256a73, type: 2}
   runText: {fileID: 11400000, guid: 14838eb575c97e6499b701a6bae9726a, type: 2}
   fightText: {fileID: 11400000, guid: 16852cb5d637d2f4686f6bbc6135f154, type: 2}
+  playerHealthPos: {x: -407.9, y: -90.2, z: 0}
+  enemyHealthPos: {x: 369, y: 75.6, z: 0}
+  mainBoxPos: {x: 0, y: -236.7142, z: 0}
+  enemyPos: {x: 4.05, y: 2.41, z: 0}
+  speed: 2
   move: What move?
   menuOptions:
   - Fight
@@ -3032,11 +3036,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1283221563}
   m_CullTransparentMesh: 1
---- !u!1 &1363104150 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 221521852908070104, guid: e4b9e146345bf6645a093dd3989ed8e7, type: 3}
-  m_PrefabInstance: {fileID: 221521853731910990}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1369685295
 GameObject:
   m_ObjectHideFlags: 0
@@ -3430,7 +3429,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1486498077}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.05, y: 2.41, z: 0}
+  m_LocalPosition: {x: 15.79, y: 2.41, z: 0}
   m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
   m_Children: []
   m_Father: {fileID: 0}
@@ -3642,7 +3641,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 369, y: 75.6}
+  m_AnchoredPosition: {x: -830, y: 75.6}
   m_SizeDelta: {x: 400, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1618058465

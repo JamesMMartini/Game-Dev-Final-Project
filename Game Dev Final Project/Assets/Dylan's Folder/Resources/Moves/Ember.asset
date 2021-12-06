@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveName: 
   description: 
-  type: 0
+  type: 2
   power: 45
   accuracy: 100
   pp: 20

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8d85ec2e5a75df54b88d6bad6f8ea021, type: 3}
-  m_Name: BattleOpen
+  m_Name: EnterPokemon
   m_EditorClassIdentifier: 
-  type: 0
-  text: The battle begins!
-  previousAction: {fileID: 0}
-  nextAction: {fileID: 11400000, guid: 227de84a0c26edc4280341434611f7db, type: 2}
+  type: 6
+  text: ', I choose you!'
+  previousAction: {fileID: 11400000, guid: 4ff3d9ef5ffbebb4ba78931660368c34, type: 2}
+  nextAction: {fileID: 11400000, guid: 617f84a3ec1d9c54e904ee55c0256a73, type: 2}

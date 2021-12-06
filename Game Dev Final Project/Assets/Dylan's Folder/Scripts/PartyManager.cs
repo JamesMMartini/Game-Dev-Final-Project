@@ -24,23 +24,68 @@ public class PartyManager : MonoBehaviour
         //When the player clicks left or right, the index should move one,
         if(Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            selectIndex--;
+            if(selectIndex - 1 < 0) //We reached the beginning of the party
+            {
+                selectIndex = partySlots.Length - 1;
+            }
+            else //Good to move
+            {
+                selectIndex--;
+            }
+
             Debug.Log(selectIndex);
         }
         else if(Input.GetKeyDown(KeyCode.RightArrow))
         {
-            selectIndex++;
+            if(selectIndex + 1 > partySlots.Length - 1) //We reached end of the party
+            {
+                selectIndex = 0;
+            }
+            else
+            {
+                selectIndex++;
+            }
             Debug.Log(selectIndex);
         }
 
         //If they click up or down, the index should move two
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-
+            if(selectIndex - 2 < 0) //We reached the top of party
+            {
+                if (selectIndex % 2 == 0) //If it's even
+                {
+                    selectIndex = partySlots.Length - 2; //Bottom of Left Row
+                }
+                else
+                {
+                    selectIndex = partySlots.Length - 1; //Bottom of right Row
+                }
+            }
+            else //Good to go
+            {
+                selectIndex-= 2;
+            }
+            Debug.Log(selectIndex);
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-
+            if (selectIndex + 2 > partySlots.Length - 1) //We reached the bottom
+            {
+                if (selectIndex % 2 == 0) //If it's even
+                {
+                    selectIndex = 0; //Bottom of Left Row
+                }
+                else
+                {
+                    selectIndex = 1; //Bottom of right Row
+                }
+            }
+            else //Good to go
+            {
+                selectIndex += 2;
+            }
+            Debug.Log(selectIndex);
         }
 
         //Testing to see if The highlight boxes will pop up

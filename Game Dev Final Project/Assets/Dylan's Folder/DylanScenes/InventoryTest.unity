@@ -1757,6 +1757,10 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 221521852908070105, guid: e4b9e146345bf6645a093dd3989ed8e7, type: 3}
+      propertyPath: partyList.Array.data[0].level
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 221521852908070105, guid: e4b9e146345bf6645a093dd3989ed8e7, type: 3}
       propertyPath: partyList.Array.data[2]._base
       value: 
       objectReference: {fileID: 11400000, guid: 28855121f6a87194cabc24cb97a163e0, type: 2}

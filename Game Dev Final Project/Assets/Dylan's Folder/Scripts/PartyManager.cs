@@ -5,7 +5,9 @@ using UnityEngine;
 public class PartyManager : MonoBehaviour
 {
 
-    private GameManager gameManger; 
+    private GameManager gameManager;
+
+    private List<Pokemon> partyPokemonCopy;
 
     PartyDisplaySet[] partySlots;
 
@@ -13,26 +15,48 @@ public class PartyManager : MonoBehaviour
 
     private void Awake()
     {
-        gameManger = FindObjectOfType<GameManager>();
+        gameManager = FindObjectOfType<GameManager>();
+        partyPokemonCopy = gameManager.GetComponent<PokemonParty>().partyList;
         Init();
         
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        Init();
-    }
 
     // Update is called once per frame
     void Update()
     {
-        //We still need to initialize party pokemon into array
 
-        //When the player clicks left or right, the index should move one,
-        if(Input.GetKeyDown(KeyCode.LeftArrow))
+        //Here, we take in player input to navigate the menu
+        if(Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow))
         {
-            if(selectIndex - 1 < 0) //We reached the beginning of the party
+            HorizontalInput();
+        }
+        else if(Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            VerticalInput();
+        }
+   
+
+        //Testing to see if The highlight boxes will pop up
+        foreach(PartyDisplaySet i in partySlots)
+        {
+            if( System.Array.IndexOf(partySlots, i) == selectIndex)
+            {
+                i.setHighlightPokemon(true); //We highlight the pokemon
+            }
+            else
+            {
+                i.setHighlightPokemon(false); //We make sure it isn't highlighted
+            }
+        }
+    }
+
+    private void HorizontalInput()
+    {
+        //When the player clicks left or right, the index should move one,
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            if (selectIndex - 1 < 0) //We reached the beginning of the party
             {
                 selectIndex = partySlots.Length - 1;
             }
@@ -43,9 +67,9 @@ public class PartyManager : MonoBehaviour
 
             Debug.Log(selectIndex);
         }
-        else if(Input.GetKeyDown(KeyCode.RightArrow))
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            if(selectIndex + 1 > partySlots.Length - 1) //We reached end of the party
+            if (selectIndex + 1 > partySlots.Length - 1) //We reached end of the party
             {
                 selectIndex = 0;
             }
@@ -55,11 +79,14 @@ public class PartyManager : MonoBehaviour
             }
             Debug.Log(selectIndex);
         }
+    }
 
+    private void VerticalInput()
+    {
         //If they click up or down, the index should move two
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            if(selectIndex - 2 < 0) //We reached the top of party
+            if (selectIndex - 2 < 0) //We reached the top of party
             {
                 if (selectIndex % 2 == 0) //If it's even
                 {
@@ -72,7 +99,7 @@ public class PartyManager : MonoBehaviour
             }
             else //Good to go
             {
-                selectIndex-= 2;
+                selectIndex -= 2;
             }
             Debug.Log(selectIndex);
         }
@@ -95,25 +122,20 @@ public class PartyManager : MonoBehaviour
             }
             Debug.Log(selectIndex);
         }
-
-        //Testing to see if The highlight boxes will pop up
-        foreach(PartyDisplaySet i in partySlots)
-        {
-            if( System.Array.IndexOf(partySlots, i) == selectIndex)
-            {
-                i.setHighlightPokemon(true); //We highlight the pokemon
-            }
-            else
-            {
-                i.setHighlightPokemon(false); //We make sure it isn't highlighted
-            }
-        }
     }
+
 
     public void Init()
     {
         partySlots = GetComponentsInChildren<PartyDisplaySet>();
-        
+        //We still need to initialize party pokemon into array
+        foreach (Pokemon p in partyPokemonCopy)
+        {
+            int index = partyPokemonCopy.IndexOf(p);
+            Debug.Log(index);
+            partySlots[index].partyPokemon = p;
+        }
+
         //We can use this index to put the main party pokemon into the array
         //int transferIndex = 0;
         //partySlots = GetComponentsInChildren<PartyDisplaySet>();

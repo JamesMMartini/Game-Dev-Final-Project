@@ -5,11 +5,19 @@ using UnityEngine;
 public class PartyManager : MonoBehaviour
 {
 
+    private GameManager gameManger; 
+
     PartyDisplaySet[] partySlots;
 
     int selectIndex;
 
-    
+    private void Awake()
+    {
+        gameManger = FindObjectOfType<GameManager>();
+        Init();
+        
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -104,7 +112,15 @@ public class PartyManager : MonoBehaviour
 
     public void Init()
     {
-
         partySlots = GetComponentsInChildren<PartyDisplaySet>();
+        
+        //We can use this index to put the main party pokemon into the array
+        //int transferIndex = 0;
+        //partySlots = GetComponentsInChildren<PartyDisplaySet>();
+        //foreach(PartyDisplaySet pokeDisplay in partySlots)
+        //{
+        //    pokeDisplay.partyPokemon = gameManger.GetComponent<PokemonParty>().partyList[transferIndex];
+        //    transferIndex++;
+        //}
     }
 }

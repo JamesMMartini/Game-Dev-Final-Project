@@ -6,6 +6,7 @@ TagManager:
   tags:
   - UI Button
   - UI Button Group
+  - GameManager
   layers:
   - Default
   - TransparentFX

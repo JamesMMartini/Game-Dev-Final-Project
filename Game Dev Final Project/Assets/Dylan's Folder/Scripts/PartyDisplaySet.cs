@@ -13,6 +13,9 @@ public class PartyDisplaySet : MonoBehaviour
     //This pokemon is set up by the party manager
     public Pokemon partyPokemon;
 
+    //We turn this objecto on and off if gameObject is selected
+    public GameObject highlight;
+
     //Display variables
     public TextMeshProUGUI textName;
     public TextMeshProUGUI textHP;
@@ -45,4 +48,12 @@ public class PartyDisplaySet : MonoBehaviour
     {
         
     }
+
+    //We turn on or off the highlight depending on the bool recieved
+    public void setHighlightPokemon(bool isActive)
+    {
+        highlight.SetActive(isActive);
+    }
+
+
 }

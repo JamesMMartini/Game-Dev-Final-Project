@@ -10,6 +10,9 @@ public class MenuManager : MonoBehaviour
 {
     PokemonParty pokemonParty;
 
+    public PokemonBase playerBase;
+    public PokemonBase enemyBase;
+
     Pokemon playerPokemon;
     public Pokemon enemyPokemon;
 
@@ -57,9 +60,6 @@ public class MenuManager : MonoBehaviour
     public string[] menuOptions;
     public string[] moves;
 
-    [Header("Pokemon Select Screen")]
-    public GameObject selectScreen;
-
     int selectedRow, selectedCol;
     bool menuActive;
 
@@ -76,34 +76,11 @@ public class MenuManager : MonoBehaviour
         playerSprite.GetComponent<SpriteRenderer>().sprite = playerPokemon.BackSprite;
         enemySprite.GetComponent<SpriteRenderer>().sprite = enemyPokemon.FrontSprite;
 
-        if (playerPokemon.HP <= 0)
-        {
-            Pokemon newPokemon = null;
-            foreach (Pokemon poke in pokemonParty.partyList)
-            {
-                if (poke.HP > 0)
-                {
-                    newPokemon = poke;
-                    break;
-                }
-            }
-
-            if (newPokemon == null)
-            {
-
-            }
-            else
-            {
-                playerPokemon = newPokemon;
-                playerSprite.GetComponent<SpriteRenderer>().sprite = playerPokemon.BackSprite;
-            }
-        }
-
         menuActive = false;
         StartCoroutine(EnterObjects());
 
-        playerStats.UpdateBars(playerPokemon.HP, playerPokemon.MaxHP);
-        enemyStats.UpdateBars(enemyPokemon.HP, enemyPokemon.MaxHP);
+        playerStats.UpdateBars(playerPokemon.HP, playerPokemon.Base.MaxHP);
+        enemyStats.UpdateBars(enemyPokemon.HP, enemyPokemon.Base.MaxHP);
     }
 
     // Update is called once per frame
@@ -132,7 +109,7 @@ public class MenuManager : MonoBehaviour
 
                         // Swap the menus and the pokemon
                         SwapMenu(narrationMenu, newDialog);
-                        StartCoroutine(SwapPokemon(playerPokemon));
+                        StartCoroutine(SwapPokemon());
                     }
                     else if (currentDialog.Next.NarrationType == NarrationType.MainMenu)
                     {
@@ -146,40 +123,12 @@ public class MenuManager : MonoBehaviour
                     {
                         EnemyAction();
                     }
-                    else if (currentDialog.Next.NarrationType == NarrationType.SelectScreen)
-                    {
-                        activeMenu = selectScreen;
-                        selectScreen.SetActive(true);
-                    }
                     else if (currentDialog.Next.NarrationType == NarrationType.EndDialog)
                     {
                         GameManager.gameManager.GetComponent<GameManager>().party = pokemonParty;
                         GameManager.gameManager.GetComponent<GameManager>().SaveData();
 
                         SceneManager.LoadScene("OpenWorld");
-                    }
-                }
-            }
-            else if (activeMenu == selectScreen)
-            {
-                if (Input.GetKeyDown(KeyCode.Return)) // A pokemon was selected
-                {
-                    if (pokemonParty.partyList[selectScreen.GetComponentInChildren<PartyManager>().selectIndex].HP > 0) // We can choose the pokemon
-                    {
-                        playerPokemon = pokemonParty.partyList[selectScreen.GetComponentInChildren<PartyManager>().selectIndex];
-
-                        // Create a new narration dialog for this
-                        NarrationDialog newDialog = ScriptableObject.CreateInstance<NarrationDialog>();
-                        newDialog.NarrationType = NarrationType.SelectPokemon;
-                        newDialog.Next = currentDialog.Next.Next;
-                        newDialog.Previous = currentDialog;
-                        newDialog.Text = playerPokemon.Name + enterPokemon.Text;
-
-                        // Swap the menus and the pokemon
-                        SwapMenu(narrationMenu, newDialog);
-                        StartCoroutine(SwapPokemon(playerPokemon));
-
-                        playerStats.UpdateBars(playerPokemon.HP, playerPokemon.MaxHP);
                     }
                 }
             }
@@ -238,7 +187,7 @@ public class MenuManager : MonoBehaviour
         menuActive = true;
     }
 
-    IEnumerator SwapPokemon(Pokemon newPokemon)
+    IEnumerator SwapPokemon()
     {
         menuActive = false; // Scattering these lines around to make sure that you can't advance the screen before the pokemon finishes swapping
 
@@ -271,7 +220,6 @@ public class MenuManager : MonoBehaviour
         menuActive = false;
 
         // SWAP THE POKEMON SPRITE WHEN IMPLEMENTED
-        playerSprite.GetComponent<SpriteRenderer>().sprite = playerPokemon.BackSprite;
 
         // Move the trainer off screen and pokemon on screen
         t = 0.0f;
@@ -306,29 +254,7 @@ public class MenuManager : MonoBehaviour
             }
             else if (selectedText == "Pokemon")
             {
-                NarrationDialog swapDialog = ScriptableObject.CreateInstance<NarrationDialog>();
-                swapDialog.NarrationType = NarrationType.NewDialog;
-                swapDialog.Text = "Change pokemon.";
-                currentDialog.Next = swapDialog;
-                swapDialog.Previous = currentDialog;
 
-                NarrationDialog selectDialog = ScriptableObject.CreateInstance<NarrationDialog>();
-                selectDialog.NarrationType = NarrationType.SelectScreen;
-                swapDialog.Next = selectDialog;
-                selectDialog.Previous = swapDialog;
-
-                NarrationDialog enemyMove = ScriptableObject.CreateInstance<NarrationDialog>();
-                enemyMove.NarrationType = NarrationType.NewDialog;
-                enemyMove.Text = enemyPokemon.Name + " prepares to attack!";
-                enemyMove.Previous = selectDialog;
-                selectDialog.Next = enemyMove;
-
-                NarrationDialog enemyAttacks = ScriptableObject.CreateInstance<NarrationDialog>();
-                enemyAttacks.NarrationType = NarrationType.EnemyMove;
-                enemyAttacks.Previous = enemyMove;
-                enemyMove.Next = enemyAttacks;
-
-                SwapMenu(narrationMenu, swapDialog);
             }
             else if (selectedText == "Run")
             {
@@ -431,8 +357,8 @@ public class MenuManager : MonoBehaviour
         // Set the next on the action dialog
         actionDialog.Next = effectiveDialog;
 
-        playerStats.UpdateBars(playerPokemon.HP, playerPokemon.MaxHP);
-        enemyStats.UpdateBars(enemyPokemon.HP, enemyPokemon.MaxHP);
+        playerStats.UpdateBars(playerPokemon.HP, playerPokemon.Base.MaxHP);
+        enemyStats.UpdateBars(enemyPokemon.HP, enemyPokemon.Base.MaxHP);
 
         SwapMenu(narrationMenu, actionDialog);
     }
@@ -474,57 +400,18 @@ public class MenuManager : MonoBehaviour
         effectiveDialog.Next = mainMenuText;
 
         // See if the battle has ended
-        if (enemyPokemon.HP <= 0)
+        if (playerPokemon.HP <= 0 || enemyPokemon.HP <= 0)
         {
             NarrationDialog endDialog = ScriptableObject.CreateInstance<NarrationDialog>();
             endDialog.NarrationType = NarrationType.NewDialog;
             effectiveDialog.Next = endDialog;
             endDialog.Previous = effectiveDialog;
-            endDialog.Text = "It's over. Go home.";
+            endDialog.Text = "It's over. Go home. You died.";
 
             NarrationDialog closeScene = ScriptableObject.CreateInstance<NarrationDialog>();
             closeScene.NarrationType = NarrationType.EndDialog;
             closeScene.Previous = endDialog;
             endDialog.Next = closeScene;
-        }
-        else if (playerPokemon.HP <= 0) // The Pokemon has fainted and we need to swap pokemon
-        {
-            int aliveCount = 0;
-            foreach (Pokemon poke in pokemonParty.partyList)
-                if (poke.HP > 0)
-                    aliveCount++;
-
-            if (aliveCount > 0) // The player can keep going
-            {
-                NarrationDialog faintDialog = ScriptableObject.CreateInstance<NarrationDialog>();
-                faintDialog.NarrationType = NarrationType.NewDialog;
-                faintDialog.Text = playerPokemon.Name + " fainted! Choose a new pokemon to battle!";
-                effectiveDialog.Next = faintDialog;
-                faintDialog.Previous = effectiveDialog;
-
-                NarrationDialog selectDialog = ScriptableObject.CreateInstance<NarrationDialog>();
-                selectDialog.NarrationType = NarrationType.SelectScreen;
-                faintDialog.Next = selectDialog;
-                selectDialog.Previous = faintDialog;
-                selectDialog.Next = enterPokemon.Next;
-            }
-            else // All the player's pokemon have fainted
-            {
-                NarrationDialog endDialog = ScriptableObject.CreateInstance<NarrationDialog>();
-                endDialog.NarrationType = NarrationType.NewDialog;
-                effectiveDialog.Next = endDialog;
-                endDialog.Previous = effectiveDialog;
-                endDialog.Text = "It's over. Go home.";
-
-                NarrationDialog closeScene = ScriptableObject.CreateInstance<NarrationDialog>();
-                closeScene.NarrationType = NarrationType.EndDialog;
-                closeScene.Previous = endDialog;
-                endDialog.Next = closeScene;
-
-                // Reset the Pokemon's health
-                foreach (Pokemon poke in pokemonParty.partyList)
-                    poke.HP = poke.MaxHP;
-            }
         }
         else // Go to the action menu
         {
@@ -534,8 +421,8 @@ public class MenuManager : MonoBehaviour
         // Set the next on the action dialog
         actionDialog.Next = effectiveDialog;
 
-        playerStats.UpdateBars(playerPokemon.HP, playerPokemon.MaxHP);
-        enemyStats.UpdateBars(enemyPokemon.HP, enemyPokemon.MaxHP);
+        playerStats.UpdateBars(playerPokemon.HP, playerPokemon.Base.MaxHP);
+        enemyStats.UpdateBars(enemyPokemon.HP, enemyPokemon.Base.MaxHP);
 
         SwapMenu(narrationMenu, actionDialog);
     }
@@ -763,7 +650,7 @@ public class MenuManager : MonoBehaviour
 
     int CalculateDamage(Move selectedMove, Pokemon defendingPokemon, Pokemon attackingPokemon, float effectiveness)
     {
-        float damage = (selectedMove.Base.Power * (attackingPokemon.Attack / defendingPokemon.Defense)) * (attackingPokemon.Attack / 100) + 4;
+        float damage = (selectedMove.Base.Power * (attackingPokemon.Attack / defendingPokemon.Defense)) * (attackingPokemon.Attack / 100) + 5;
         damage *= effectiveness;
 
         return (int)damage;

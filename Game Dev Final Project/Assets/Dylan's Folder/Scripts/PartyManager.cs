@@ -5,23 +5,35 @@ using UnityEngine;
 public class PartyManager : MonoBehaviour
 {
 
+    //Our GameManager
     private GameManager gameManager;
 
+    //We store a copy of the GameManager's pokemon
     private List<Pokemon> partyPokemonCopy;
 
+    //List of UI elements for Party Display
     PartyDisplaySet[] partySlots;
 
+    //Players cursor index
     int selectIndex;
+
+    //Boolean to see if we are in a swapping Pokemon state
+    bool swapStarted;
+    //First Swap index
+    int swapOneIndex;
 
     private void Awake()
     {
         selectIndex = 0;
+
+        swapStarted = false;
+        swapOneIndex = -1; //-1 is out of range, so don't have to worry about it
+
         gameManager = FindObjectOfType<GameManager>();
         partyPokemonCopy = gameManager.GetComponent<PokemonParty>().partyList;
         Init();
         
     }
-
 
     // Update is called once per frame
     void Update()
@@ -42,6 +54,8 @@ public class PartyManager : MonoBehaviour
         {
             //Enter swapping mode
             SwapPokemon();
+            //We are now starting a swap
+            swapStarted = true;
         }
    
 
@@ -51,10 +65,18 @@ public class PartyManager : MonoBehaviour
             if( System.Array.IndexOf(partySlots, i) == selectIndex)
             {
                 i.SetHighlightPokemon(true); //We highlight the pokemon
+                if(swapStarted) //If we are currently selecting a swap
+                {
+                    i.SetSelectedPokemon(true); 
+                }
             }
             else
             {
                 i.SetHighlightPokemon(false); //We make sure it isn't highlighted
+                if(swapStarted && System.Array.IndexOf(partySlots, i) != swapOneIndex) //If we are swapping and pokemon is not first selected
+                {
+                    i.SetSelectedPokemon(false);
+                }
             }
         }
     }
@@ -136,7 +158,7 @@ public class PartyManager : MonoBehaviour
     private void SwapPokemon()
     {
         //We need to store the index values for the final swap
-        int swapOneIndex = selectIndex;
+        swapOneIndex = selectIndex;
 
         //Highlight the UI
         partySlots[swapOneIndex].SetSelectedPokemon(true);

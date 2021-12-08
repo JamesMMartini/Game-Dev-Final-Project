@@ -67,6 +67,11 @@ public class PartyManager : MonoBehaviour
             {
                 //Re initialize the array for the display
                 Init();
+                //Remove all selected Highlights
+                foreach(PartyDisplaySet i in partySlots)
+                {
+                    i.SetSelectedPokemon(false);
+                }
                 swapStarted = false;
             }
         }
@@ -185,14 +190,18 @@ public class PartyManager : MonoBehaviour
         }
         else if(swapStarted) // We are ending the swap
         {
+            //We store the value for the second choice
             swapTwoIndex = selectIndex;
 
-            if(swapOneIndex != swapTwoIndex) //If we haven't reselected same Pokemon
+            //Swap Pokemon in Display, PartyManager array, and in gamemanager array
+            if (swapOneIndex != swapTwoIndex) //If we haven't reselected same Pokemon
             {
                 Swap(swapOneIndex, swapTwoIndex);
             }
 
-            //Swap Pokemon in Display, PartyManager array, and in gamemanager array
+            //Reset all values
+            swapOneIndex = -1;
+            swapTwoIndex = -1;
         }
         else
         {
@@ -201,7 +210,6 @@ public class PartyManager : MonoBehaviour
 
 
 
-        //Allow players to choose a second pokemon
 
         //Swap Pokemon in Display, PartyManager array, and in gamemanager array
     }

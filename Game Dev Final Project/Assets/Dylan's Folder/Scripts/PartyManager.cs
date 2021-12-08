@@ -22,6 +22,11 @@ public class PartyManager : MonoBehaviour
     //First Swap index
     int swapOneIndex, swapTwoIndex;
 
+    //Animation Speed
+    float speed = 2f;
+    //Animation offset (How far the UI element moves)
+    public float distance = 1000f;
+
     private void Awake()
     {
         selectIndex = 0;
@@ -36,6 +41,28 @@ public class PartyManager : MonoBehaviour
 
         Init();
         
+    }
+
+    public void Init()
+    {
+        //partySlots = GetComponentsInChildren<PartyDisplaySet>();
+        //We still need to initialize party pokemon into array
+        foreach (Pokemon p in partyPokemonCopy)
+        {
+            int index = partyPokemonCopy.IndexOf(p);
+            Debug.Log(index);
+            partySlots[index].partyPokemon = p;
+            partySlots[index].Init();
+        }
+
+        //We can use this index to put the main party pokemon into the array
+        //int transferIndex = 0;
+        //partySlots = GetComponentsInChildren<PartyDisplaySet>();
+        //foreach(PartyDisplaySet pokeDisplay in partySlots)
+        //{
+        //    pokeDisplay.partyPokemon = gameManger.GetComponent<PokemonParty>().partyList[transferIndex];
+        //    transferIndex++;
+        //}
     }
 
     // Update is called once per frame
@@ -193,15 +220,19 @@ public class PartyManager : MonoBehaviour
             //We store the value for the second choice
             swapTwoIndex = selectIndex;
 
+            StartCoroutine(SwapAnim());
+
+            //Once the party is offscreen, we do the swap;
             //Swap Pokemon in Display, PartyManager array, and in gamemanager array
-            if (swapOneIndex != swapTwoIndex) //If we haven't reselected same Pokemon
-            {
-                Swap(swapOneIndex, swapTwoIndex);
-            }
+            //if (swapOneIndex != swapTwoIndex) //If we haven't reselected same Pokemon
+            //{
+            //    Swap(swapOneIndex, swapTwoIndex);
+            //}
 
             //Reset all values
-            swapOneIndex = -1;
-            swapTwoIndex = -1;
+            //swapOneIndex = -1;
+            //swapTwoIndex = -1;
+
         }
         else
         {
@@ -212,6 +243,84 @@ public class PartyManager : MonoBehaviour
 
 
         //Swap Pokemon in Display, PartyManager array, and in gamemanager array
+    }
+
+    IEnumerator SwapAnim()
+    {
+        //FIRST SLOT
+
+        //We first need the in and out positions for both objects
+        Vector3 slotFirstIn = partySlots[swapOneIndex].transform.localPosition;
+        float firstOffset = 0; //We need a value to offset the UI element for going out of screen
+        if(swapOneIndex % 2 == 0) // Is the element on the left side
+        {
+            firstOffset = -distance; //We move element off to the left, using the distance in inspector
+        }
+        else //Element is on the Right Side
+        {
+            firstOffset = distance; //We move element off to the right, using the distance in inspector
+        }
+        Vector3 slotFirstOut = new Vector3(slotFirstIn.x + firstOffset, slotFirstIn.y, slotFirstIn.z);
+
+        //SECOND SLOT
+
+        //We first need the in and out positions for both objects
+        Vector3 slotSecondIn = partySlots[swapTwoIndex].transform.localPosition;
+        float secondOffset = 0; //We need a value to offset the UI element for going out of screen
+        if (swapOneIndex % 2 == 0) // Is the element on the left side
+        {
+            secondOffset = -distance; //We move element off to the left, using the distance in inspector
+        }
+        else //Element is on the Right Side
+        {
+            secondOffset = distance; //We move element off to the right, using the distance in inspector
+        }
+        Vector3 slotSecondOut = new Vector3(slotSecondIn.x + secondOffset, slotSecondIn.y, slotSecondIn.z);
+
+        // Make sure the pokemon is out of frame
+        float t = 0.0f;
+        while (t < 1.0f)
+        {
+            //menuActive = false;
+
+            t += Time.deltaTime * speed * 2;
+            partySlots[swapOneIndex].transform.localPosition = Vector3.Lerp(slotFirstIn, slotFirstOut, t);
+            partySlots[swapTwoIndex].transform.localPosition = Vector3.Lerp(slotSecondIn, slotSecondOut, t);
+            yield return null;
+        }
+
+        //Once the party is offscreen, we do the swap;
+        //Swap Pokemon in Display, PartyManager array, and in gamemanager array
+        if (swapOneIndex != swapTwoIndex) //If we haven't reselected same Pokemon
+        {
+            Swap(swapOneIndex, swapTwoIndex);
+        }
+
+        //Re initialize the array for the display
+        Init();
+
+        //Lastly, we move the values back to their original positions
+        t = 0.0f;
+        while (t < 1.0f)
+        {
+            //menuActive = false;
+
+            t += Time.deltaTime * speed * 2;
+            partySlots[swapOneIndex].transform.localPosition = Vector3.Lerp(slotFirstOut, slotFirstIn, t);
+            partySlots[swapTwoIndex].transform.localPosition = Vector3.Lerp(slotSecondOut, slotSecondIn, t);
+            yield return null;
+        }
+
+        //Reset all values
+        swapOneIndex = -1;
+        swapTwoIndex = -1;
+
+        //Remove all selected Highlights
+        foreach (PartyDisplaySet i in partySlots)
+        {
+            i.SetSelectedPokemon(false);
+        }
+        swapStarted = false;
     }
 
     //Swaps two elements in the GameManager Pokemon list
@@ -225,25 +334,5 @@ public class PartyManager : MonoBehaviour
         pokeManager.partyList[second] = temp;
     }
 
-    public void Init()
-    {
-        //partySlots = GetComponentsInChildren<PartyDisplaySet>();
-        //We still need to initialize party pokemon into array
-        foreach (Pokemon p in partyPokemonCopy)
-        {
-            int index = partyPokemonCopy.IndexOf(p);
-            Debug.Log(index);
-            partySlots[index].partyPokemon = p;
-            partySlots[index].Init();
-        }
 
-        //We can use this index to put the main party pokemon into the array
-        //int transferIndex = 0;
-        //partySlots = GetComponentsInChildren<PartyDisplaySet>();
-        //foreach(PartyDisplaySet pokeDisplay in partySlots)
-        //{
-        //    pokeDisplay.partyPokemon = gameManger.GetComponent<PokemonParty>().partyList[transferIndex];
-        //    transferIndex++;
-        //}
-    }
 }

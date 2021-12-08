@@ -11,14 +11,13 @@ public class PartyManager : MonoBehaviour
 
     PartyDisplaySet[] partySlots;
 
-    int selectIndex;
+    public int selectIndex;
 
     private void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
         partyPokemonCopy = gameManager.GetComponent<PokemonParty>().partyList;
         Init();
-        
     }
 
 

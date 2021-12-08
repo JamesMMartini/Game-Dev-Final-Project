@@ -27,31 +27,15 @@ public class PartyDisplaySet : MonoBehaviour
     public Image imageHP;
 
     //We intialize all the variables for the display
+    //Can't put this in
     private void Awake()
     {
-        //partyPokemon.Init();
-        //textName.text = partyPokemon.Name;
-        //textHP.text = partyPokemon.HP + "/ " + partyPokemon.MaxHP;
-        //textLV.text = "LV: " + partyPokemon.Level;
-
-        //imagePoke.sprite = partyPokemon.FrontSprite;
-
-        ////We are setting the HP bar to be a fraction of the full HP 
-        //imageHP.fillAmount = ((float)partyPokemon.HP/ (float)partyPokemon.MaxHP); 
 
     }
     // Start is called before the first frame update
     void Start()
     {
-        partyPokemon.Init();
-        textName.text = partyPokemon.Name;
-        textHP.text = partyPokemon.HP + "/ " + partyPokemon.MaxHP;
-        textLV.text = "LV: " + partyPokemon.Level;
-
-        imagePoke.sprite = partyPokemon.FrontSprite;
-
-        //We are setting the HP bar to be a fraction of the full HP 
-        imageHP.fillAmount = ((float)partyPokemon.HP / (float)partyPokemon.MaxHP);
+        Init();
     }
 
     // Update is called once per frame
@@ -72,5 +56,17 @@ public class PartyDisplaySet : MonoBehaviour
         selectingHighlight.SetActive(isActive);
     }
 
+    public void Init()
+    {
+        partyPokemon.Init();
+        textName.text = partyPokemon.Name;
+        textHP.text = partyPokemon.HP + "/ " + partyPokemon.MaxHP;
+        textLV.text = "LV: " + partyPokemon.Level;
+
+        imagePoke.sprite = partyPokemon.FrontSprite;
+
+        //We are setting the HP bar to be a fraction of the full HP 
+        imageHP.fillAmount = ((float)partyPokemon.HP / (float)partyPokemon.MaxHP);
+    }
 
 }

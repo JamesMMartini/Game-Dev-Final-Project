@@ -31,7 +31,9 @@ public class PartyManager : MonoBehaviour
         swapTwoIndex = -1; //-1 is out of range, so don't have to worry about it
 
         gameManager = FindObjectOfType<GameManager>();
+        partySlots = GetComponentsInChildren<PartyDisplaySet>();
         partyPokemonCopy = gameManager.GetComponent<PokemonParty>().partyList;
+
         Init();
         
     }
@@ -63,6 +65,8 @@ public class PartyManager : MonoBehaviour
             }
             else
             {
+                //Re initialize the array for the display
+                Init();
                 swapStarted = false;
             }
         }
@@ -189,8 +193,6 @@ public class PartyManager : MonoBehaviour
             }
 
             //Swap Pokemon in Display, PartyManager array, and in gamemanager array
-
-
         }
         else
         {
@@ -217,13 +219,14 @@ public class PartyManager : MonoBehaviour
 
     public void Init()
     {
-        partySlots = GetComponentsInChildren<PartyDisplaySet>();
+        //partySlots = GetComponentsInChildren<PartyDisplaySet>();
         //We still need to initialize party pokemon into array
         foreach (Pokemon p in partyPokemonCopy)
         {
             int index = partyPokemonCopy.IndexOf(p);
             Debug.Log(index);
             partySlots[index].partyPokemon = p;
+            partySlots[index].Init();
         }
 
         //We can use this index to put the main party pokemon into the array

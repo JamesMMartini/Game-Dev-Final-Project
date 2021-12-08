@@ -20,7 +20,7 @@ public class PartyManager : MonoBehaviour
     //Boolean to see if we are in a swapping Pokemon state
     bool swapStarted;
     //First Swap index
-    int swapOneIndex;
+    int swapOneIndex, swapTwoIndex;
 
     private void Awake()
     {
@@ -28,6 +28,7 @@ public class PartyManager : MonoBehaviour
 
         swapStarted = false;
         swapOneIndex = -1; //-1 is out of range, so don't have to worry about it
+        swapTwoIndex = -1; //-1 is out of range, so don't have to worry about it
 
         gameManager = FindObjectOfType<GameManager>();
         partyPokemonCopy = gameManager.GetComponent<PokemonParty>().partyList;
@@ -54,8 +55,16 @@ public class PartyManager : MonoBehaviour
         {
             //Enter swapping mode
             SwapPokemon();
-            //We are now starting a swap
-            swapStarted = true;
+            //This if statement should enter us in and out of the Swap faze.
+            //This happens after the swap function, so shouldn't interfere
+            if (!swapStarted)
+            {
+                swapStarted = true;
+            }
+            else
+            {
+                swapStarted = false;
+            }
         }
    
 
@@ -157,23 +166,53 @@ public class PartyManager : MonoBehaviour
 
     private void SwapPokemon()
     {
-        //We need to store the index values for the final swap
-        swapOneIndex = selectIndex;
 
-        //Highlight the UI
-        partySlots[swapOneIndex].SetSelectedPokemon(true);
+        if (!swapStarted) //We need to start setting up the swap
+        {
+            //We need to store the index values for the final swap
+            swapOneIndex = selectIndex;
 
-        //Turn off regular select
+            //Highlight the UI
+            partySlots[swapOneIndex].SetSelectedPokemon(true);
+
+            //Display button instructions on how to swap (Back space to cancel, enter to select second pokemon)
 
 
-        //We need to highlight the currently chosen pokemon
+        }
+        else if(swapStarted) // We are ending the swap
+        {
+            swapTwoIndex = selectIndex;
+
+            if(swapOneIndex != swapTwoIndex) //If we haven't reselected same Pokemon
+            {
+                Swap(swapOneIndex, swapTwoIndex);
+            }
+
+            //Swap Pokemon in Display, PartyManager array, and in gamemanager array
 
 
-        //Display button instructions on how to swap (Back space to cancel, enter to select second pokemon)
+        }
+        else
+        {
+            Debug.Log("Something went wrong with the swap");
+        }
+
+
 
         //Allow players to choose a second pokemon
 
         //Swap Pokemon in Display, PartyManager array, and in gamemanager array
+    }
+
+    //Swaps two elements in the GameManager Pokemon list
+    void Swap(int first, int second)
+    {
+        //Make a variable to the managerList
+        PokemonParty pokeManager = gameManager.GetComponent<PokemonParty>();
+        //First, we temporarily store the first pokemon chosen
+        Pokemon temp = pokeManager.partyList[first];
+        pokeManager.partyList[first] = pokeManager.partyList[second];
+        pokeManager.partyList[second] = temp;
     }
 
     public void Init()

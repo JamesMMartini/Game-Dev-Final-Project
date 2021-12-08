@@ -27,7 +27,7 @@ public class Pokemon
 
     public void Init()
     {
-        HP = _base.MaxHP;
+        HP = MaxHP;
 
         //Generate Moves
         Moves = new List<Move>();
@@ -96,6 +96,7 @@ public class Pokemon
     public int MaxHP
     {
         //Apparently the formula to calculate XXXX in Pokemon
-        get { return Mathf.FloorToInt((_base.MaxHP * level) / 100f) + 10; }
+        //Pokemon uses EVs and IVs, but well leave them all at 50 for now
+        get { return Mathf.FloorToInt(0.01f * ((2 * _base.MaxHP) + 50 + Mathf.FloorToInt(0.25f * 50f)) * level + 10); }
     }
 }

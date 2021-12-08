@@ -6,6 +6,7 @@ TagManager:
   tags:
   - UI Button
   - UI Button Group
+  - GameManager
   layers:
   - Default
   - TransparentFX
@@ -16,9 +17,9 @@ TagManager:
   - 
   - environment
   - SolidObjects
-  - 
-  - LongGrass
   - Player
+  - LongGrass
+  - PartyHighlight
   - 
   - 
   - 

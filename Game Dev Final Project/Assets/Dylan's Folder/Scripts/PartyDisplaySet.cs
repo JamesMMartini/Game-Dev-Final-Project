@@ -16,6 +16,9 @@ public class PartyDisplaySet : MonoBehaviour
     //We turn this objecto on and off if gameObject is selected
     public GameObject highlight;
 
+    //We will highlight this green if gameObject is being swapped
+    public GameObject selectingHighlight;
+
     //Display variables
     public TextMeshProUGUI textName;
     public TextMeshProUGUI textHP;
@@ -24,21 +27,36 @@ public class PartyDisplaySet : MonoBehaviour
     public Image imageHP;
 
     //We intialize all the variables for the display
+    //Can't put this in
     private void Awake()
     {
-        //partyPokemon.Init();
-        //textName.text = partyPokemon.Name;
-        //textHP.text = partyPokemon.HP + "/ " + partyPokemon.MaxHP;
-        //textLV.text = "LV: " + partyPokemon.Level;
-
-        //imagePoke.sprite = partyPokemon.FrontSprite;
-
-        ////We are setting the HP bar to be a fraction of the full HP 
-        //imageHP.fillAmount = ((float)partyPokemon.HP/ (float)partyPokemon.MaxHP); 
 
     }
     // Start is called before the first frame update
     void Start()
+    {
+        Init();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    //We turn on or off the highlight depending on the bool recieved
+    public void SetHighlightPokemon(bool isActive)
+    {
+        highlight.SetActive(isActive);
+    }
+    
+    //We turn on or off the green select highlight depending on the bool recieved
+    public void SetSelectedPokemon(bool isActive)
+    {
+        selectingHighlight.SetActive(isActive);
+    }
+
+    public void Init()
     {
         partyPokemon.Init();
         textName.text = partyPokemon.Name;
@@ -50,18 +68,5 @@ public class PartyDisplaySet : MonoBehaviour
         //We are setting the HP bar to be a fraction of the full HP 
         imageHP.fillAmount = ((float)partyPokemon.HP / (float)partyPokemon.MaxHP);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    //We turn on or off the highlight depending on the bool recieved
-    public void setHighlightPokemon(bool isActive)
-    {
-        highlight.SetActive(isActive);
-    }
-
 
 }

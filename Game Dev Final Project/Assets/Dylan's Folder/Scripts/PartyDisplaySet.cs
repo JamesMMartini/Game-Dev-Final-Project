@@ -16,6 +16,9 @@ public class PartyDisplaySet : MonoBehaviour
     //We turn this objecto on and off if gameObject is selected
     public GameObject highlight;
 
+    //We will highlight this green if gameObject is being swapped
+    public GameObject selectingHighlight;
+
     //Display variables
     public TextMeshProUGUI textName;
     public TextMeshProUGUI textHP;
@@ -58,9 +61,15 @@ public class PartyDisplaySet : MonoBehaviour
     }
 
     //We turn on or off the highlight depending on the bool recieved
-    public void setHighlightPokemon(bool isActive)
+    public void SetHighlightPokemon(bool isActive)
     {
         highlight.SetActive(isActive);
+    }
+    
+    //We turn on or off the green select highlight depending on the bool recieved
+    public void SetSelectedPokemon(bool isActive)
+    {
+        selectingHighlight.SetActive(isActive);
     }
 
 

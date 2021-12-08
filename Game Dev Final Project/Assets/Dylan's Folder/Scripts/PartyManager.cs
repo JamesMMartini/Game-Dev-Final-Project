@@ -15,6 +15,7 @@ public class PartyManager : MonoBehaviour
 
     private void Awake()
     {
+        selectIndex = 0;
         gameManager = FindObjectOfType<GameManager>();
         partyPokemonCopy = gameManager.GetComponent<PokemonParty>().partyList;
         Init();
@@ -35,6 +36,13 @@ public class PartyManager : MonoBehaviour
         {
             VerticalInput();
         }
+
+        //We need a way for players to select pokemon and swap
+        if(Input.GetKeyDown(KeyCode.Return))
+        {
+            //Enter swapping mode
+            SwapPokemon();
+        }
    
 
         //Testing to see if The highlight boxes will pop up
@@ -42,11 +50,11 @@ public class PartyManager : MonoBehaviour
         {
             if( System.Array.IndexOf(partySlots, i) == selectIndex)
             {
-                i.setHighlightPokemon(true); //We highlight the pokemon
+                i.SetHighlightPokemon(true); //We highlight the pokemon
             }
             else
             {
-                i.setHighlightPokemon(false); //We make sure it isn't highlighted
+                i.SetHighlightPokemon(false); //We make sure it isn't highlighted
             }
         }
     }
@@ -124,6 +132,27 @@ public class PartyManager : MonoBehaviour
         }
     }
 
+
+    private void SwapPokemon()
+    {
+        //We need to store the index values for the final swap
+        int swapOneIndex = selectIndex;
+
+        //Highlight the UI
+        partySlots[swapOneIndex].SetSelectedPokemon(true);
+
+        //Turn off regular select
+
+
+        //We need to highlight the currently chosen pokemon
+
+
+        //Display button instructions on how to swap (Back space to cancel, enter to select second pokemon)
+
+        //Allow players to choose a second pokemon
+
+        //Swap Pokemon in Display, PartyManager array, and in gamemanager array
+    }
 
     public void Init()
     {

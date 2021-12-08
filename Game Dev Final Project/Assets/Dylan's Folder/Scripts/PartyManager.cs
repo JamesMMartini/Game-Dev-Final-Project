@@ -92,14 +92,14 @@ public class PartyManager : MonoBehaviour
             }
             else
             {
-                //Re initialize the array for the display
-                Init();
-                //Remove all selected Highlights
-                foreach(PartyDisplaySet i in partySlots)
-                {
-                    i.SetSelectedPokemon(false);
-                }
-                swapStarted = false;
+                ////Re initialize the array for the display
+                //Init();
+                ////Remove all selected Highlights
+                //foreach(PartyDisplaySet i in partySlots)
+                //{
+                //    i.SetSelectedPokemon(false);
+                //}
+                //swapStarted = false;
             }
         }
    
@@ -267,7 +267,7 @@ public class PartyManager : MonoBehaviour
         //We first need the in and out positions for both objects
         Vector3 slotSecondIn = partySlots[swapTwoIndex].transform.localPosition;
         float secondOffset = 0; //We need a value to offset the UI element for going out of screen
-        if (swapOneIndex % 2 == 0) // Is the element on the left side
+        if (swapTwoIndex % 2 == 0) // Is the element on the left side
         {
             secondOffset = -distance; //We move element off to the left, using the distance in inspector
         }

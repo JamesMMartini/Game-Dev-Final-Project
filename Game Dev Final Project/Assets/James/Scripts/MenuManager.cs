@@ -62,6 +62,7 @@ public class MenuManager : MonoBehaviour
 
     int selectedRow, selectedCol;
     bool menuActive;
+    bool resetPokemon;
 
     // Start is called before the first frame update
     void Start()
@@ -99,6 +100,7 @@ public class MenuManager : MonoBehaviour
             }
         }
 
+        resetPokemon = false;
         menuActive = false;
         StartCoroutine(EnterObjects());
 
@@ -153,6 +155,13 @@ public class MenuManager : MonoBehaviour
                     }
                     else if (currentDialog.Next.NarrationType == NarrationType.EndDialog)
                     {
+                        if (resetPokemon)
+                        {
+                            // Reset the Pokemon's health
+                            foreach (Pokemon poke in pokemonParty.partyList)
+                                poke.HP = poke.MaxHP;
+                        }
+
                         GameManager.gameManager.GetComponent<GameManager>().party = pokemonParty;
                         GameManager.gameManager.GetComponent<GameManager>().SaveData();
 
@@ -491,8 +500,11 @@ public class MenuManager : MonoBehaviour
         {
             int aliveCount = 0;
             foreach (Pokemon poke in pokemonParty.partyList)
+            {
+                Debug.Log("HP: " + poke.HP);
                 if (poke.HP > 0)
                     aliveCount++;
+            }
 
             if (aliveCount > 0) // The player can keep going
             {
@@ -521,9 +533,8 @@ public class MenuManager : MonoBehaviour
                 closeScene.Previous = endDialog;
                 endDialog.Next = closeScene;
 
-                // Reset the Pokemon's health
-                foreach (Pokemon poke in pokemonParty.partyList)
-                    poke.HP = poke.MaxHP;
+                // Ensure that we reset the pokemon's health
+                resetPokemon = true;
             }
         }
         else // Go to the action menu

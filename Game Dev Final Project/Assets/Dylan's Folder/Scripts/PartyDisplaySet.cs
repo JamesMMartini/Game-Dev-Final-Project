@@ -58,7 +58,7 @@ public class PartyDisplaySet : MonoBehaviour
 
     public void Init()
     {
-        partyPokemon.Init();
+        //partyPokemon.Init();
         textName.text = partyPokemon.Name;
         textHP.text = partyPokemon.HP + "/ " + partyPokemon.MaxHP;
         textLV.text = "LV: " + partyPokemon.Level;

@@ -27,5 +27,6 @@ public enum NarrationType
     FightMenu,
     EnemyMove,
     EndDialog,
-    SelectPokemon
+    SelectPokemon,
+    SelectScreen
 }

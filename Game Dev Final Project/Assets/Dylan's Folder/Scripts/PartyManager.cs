@@ -22,6 +22,8 @@ public class PartyManager : MonoBehaviour
     //First Swap index
     int swapOneIndex, swapTwoIndex;
 
+    //Helps us lock controls until animation is over
+    bool isAnimating;
     //Animation Speed
     float speed = 2f;
     //Animation offset (How far the UI element moves)
@@ -32,6 +34,7 @@ public class PartyManager : MonoBehaviour
         selectIndex = 0;
 
         swapStarted = false;
+        isAnimating = false;
         swapOneIndex = -1; //-1 is out of range, so don't have to worry about it
         swapTwoIndex = -1; //-1 is out of range, so don't have to worry about it
 
@@ -69,37 +72,29 @@ public class PartyManager : MonoBehaviour
     void Update()
     {
 
-        //Here, we take in player input to navigate the menu
-        if(Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow))
+        if (!isAnimating) //Make sure we aren't in the middle of aniamting
         {
-            HorizontalInput();
-        }
-        else if(Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            VerticalInput();
-        }
-
-        //We need a way for players to select pokemon and swap
-        if(Input.GetKeyDown(KeyCode.Return))
-        {
-            //Enter swapping mode
-            SwapPokemon();
-            //This if statement should enter us in and out of the Swap faze.
-            //This happens after the swap function, so shouldn't interfere
-            if (!swapStarted)
+            //Here, we take in player input to navigate the menu
+            if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow))
             {
-                swapStarted = true;
+                HorizontalInput();
             }
-            else
+            else if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow))
             {
-                ////Re initialize the array for the display
-                //Init();
-                ////Remove all selected Highlights
-                //foreach(PartyDisplaySet i in partySlots)
-                //{
-                //    i.SetSelectedPokemon(false);
-                //}
-                //swapStarted = false;
+                VerticalInput();
+            }
+
+            //We need a way for players to select pokemon and swap
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                //Enter swapping mode
+                SwapPokemon();
+                //This if statement should enter us in and out of the Swap faze.
+                //This happens after the swap function, so shouldn't interfere
+                if (!swapStarted)
+                {
+                    swapStarted = true;
+                }
             }
         }
    
@@ -247,6 +242,8 @@ public class PartyManager : MonoBehaviour
 
     IEnumerator SwapAnim()
     {
+        //Turn on isAnimating so player can't interact during animation
+        isAnimating = true;
         //FIRST SLOT
 
         //We first need the in and out positions for both objects
@@ -320,6 +317,7 @@ public class PartyManager : MonoBehaviour
         {
             i.SetSelectedPokemon(false);
         }
+        isAnimating = false;
         swapStarted = false;
     }
 

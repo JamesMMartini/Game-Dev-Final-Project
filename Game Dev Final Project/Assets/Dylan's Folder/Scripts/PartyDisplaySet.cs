@@ -19,6 +19,9 @@ public class PartyDisplaySet : MonoBehaviour
     //We will highlight this green if gameObject is being swapped
     public GameObject selectingHighlight;
 
+    //This is a block for if the gameobject is empty
+    public GameObject emptyBlock;
+
     //Display variables
     public TextMeshProUGUI textName;
     public TextMeshProUGUI textHP;
@@ -56,17 +59,38 @@ public class PartyDisplaySet : MonoBehaviour
         selectingHighlight.SetActive(isActive);
     }
 
+
+    //We can use this to quickly turn on or off a Empty Pokemon Display Block
+    public void TurnOffDisplay (bool isActive)
+    {
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(isActive);
+        }
+
+        emptyBlock.SetActive(!isActive);
+
+    }
+
     public void Init()
     {
-        //partyPokemon.Init();
-        textName.text = partyPokemon.Name;
-        textHP.text = partyPokemon.HP + "/ " + partyPokemon.MaxHP;
-        textLV.text = "LV: " + partyPokemon.Level;
+        if (partyPokemon.Base != null) //If we have a pokemon to slot
+        {
 
-        imagePoke.sprite = partyPokemon.FrontSprite;
+            //partyPokemon.Init();
+            textName.text = partyPokemon.Name;
+            textHP.text = partyPokemon.HP + "/ " + partyPokemon.MaxHP;
+            textLV.text = "LV: " + partyPokemon.Level;
 
-        //We are setting the HP bar to be a fraction of the full HP 
-        imageHP.fillAmount = ((float)partyPokemon.HP / (float)partyPokemon.MaxHP);
+            imagePoke.sprite = partyPokemon.FrontSprite;
+
+            //We are setting the HP bar to be a fraction of the full HP 
+            imageHP.fillAmount = ((float)partyPokemon.HP / (float)partyPokemon.MaxHP);
+        }
+        else //Party Slot is empty
+        {
+            TurnOffDisplay(false);
+        }
     }
 
 }

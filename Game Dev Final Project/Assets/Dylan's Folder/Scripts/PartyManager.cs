@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PartyManager : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class PartyManager : MonoBehaviour
     private List<Pokemon> partyPokemonCopy;
 
     //List of UI elements for Party Display
-    PartyDisplaySet[] partySlots;
+    public PartyDisplaySet[] partySlots;
 
     //Players cursor index
     public int selectIndex;
@@ -58,14 +59,20 @@ public class PartyManager : MonoBehaviour
             partySlots[index].Init();
         }
 
-        //We can use this index to put the main party pokemon into the array
-        //int transferIndex = 0;
-        //partySlots = GetComponentsInChildren<PartyDisplaySet>();
-        //foreach(PartyDisplaySet pokeDisplay in partySlots)
-        //{
-        //    pokeDisplay.partyPokemon = gameManger.GetComponent<PokemonParty>().partyList[transferIndex];
-        //    transferIndex++;
-        //}
+        //This function should create a temp list
+        //Remove any element that doesn't have a pokemon
+        //And then return back to a array
+        //This is so we aren't able to click on any empty objects
+        var temp = new List<PartyDisplaySet>(partySlots);
+        for (int i = 0; i < temp.Count - 1; i++)
+        {
+            if (temp[i].partyPokemon.Base == null)
+            {
+                temp.RemoveRange(i, (temp.Count - i));
+                break;
+            }
+        }
+        partySlots = temp.ToArray();
     }
 
     // Update is called once per frame
@@ -104,7 +111,14 @@ public class PartyManager : MonoBehaviour
         {
             if( System.Array.IndexOf(partySlots, i) == selectIndex)
             {
-                i.SetHighlightPokemon(true); //We highlight the pokemon
+                if(isAnimating == false)
+                {
+                    i.SetHighlightPokemon(true); //We highlight the pokemon
+                }
+                else
+                {
+                    i.SetHighlightPokemon(false);
+                }
                 if(swapStarted) //If we are currently selecting a swap
                 {
                     i.SetSelectedPokemon(true); 
@@ -113,7 +127,7 @@ public class PartyManager : MonoBehaviour
             else
             {
                 i.SetHighlightPokemon(false); //We make sure it isn't highlighted
-                if(swapStarted && System.Array.IndexOf(partySlots, i) != swapOneIndex) //If we are swapping and pokemon is not first selected
+                if((swapStarted && System.Array.IndexOf(partySlots, i) != swapOneIndex)) //If we are swapping and pokemon is not first selected
                 {
                     i.SetSelectedPokemon(false);
                 }
@@ -244,6 +258,8 @@ public class PartyManager : MonoBehaviour
     {
         //Turn on isAnimating so player can't interact during animation
         isAnimating = true;
+        //Turn of the highlight during animation;
+
         //FIRST SLOT
 
         //We first need the in and out positions for both objects
@@ -319,6 +335,7 @@ public class PartyManager : MonoBehaviour
         }
         isAnimating = false;
         swapStarted = false;
+
     }
 
     //Swaps two elements in the GameManager Pokemon list

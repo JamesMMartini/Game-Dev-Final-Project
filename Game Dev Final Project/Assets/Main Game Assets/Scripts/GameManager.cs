@@ -33,15 +33,11 @@ public class GameManager : MonoBehaviour
             saveData.PlayerLocation = player.transform.position;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void ResetData()
     {
-        
-    }
+        saveData.PlayerLocation = new Vector3(0.5f, 0.5f, 0f);
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        foreach (Pokemon p in saveData.PokemonParty.partyList)
+            p.HP = p.MaxHP;
     }
 }

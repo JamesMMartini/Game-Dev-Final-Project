@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PartyManager : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class PartyManager : MonoBehaviour
     private List<Pokemon> partyPokemonCopy;
 
     //List of UI elements for Party Display
-    PartyDisplaySet[] partySlots;
+    public PartyDisplaySet[] partySlots;
 
     //Players cursor index
     public int selectIndex;
@@ -22,6 +23,8 @@ public class PartyManager : MonoBehaviour
     //First Swap index
     int swapOneIndex, swapTwoIndex;
 
+    //Helps us lock controls until animation is over
+    bool isAnimating;
     //Animation Speed
     float speed = 2f;
     //Animation offset (How far the UI element moves)
@@ -32,6 +35,7 @@ public class PartyManager : MonoBehaviour
         selectIndex = 0;
 
         swapStarted = false;
+        isAnimating = false;
         swapOneIndex = -1; //-1 is out of range, so don't have to worry about it
         swapTwoIndex = -1; //-1 is out of range, so don't have to worry about it
 
@@ -55,51 +59,49 @@ public class PartyManager : MonoBehaviour
             partySlots[index].Init();
         }
 
-        //We can use this index to put the main party pokemon into the array
-        //int transferIndex = 0;
-        //partySlots = GetComponentsInChildren<PartyDisplaySet>();
-        //foreach(PartyDisplaySet pokeDisplay in partySlots)
-        //{
-        //    pokeDisplay.partyPokemon = gameManger.GetComponent<PokemonParty>().partyList[transferIndex];
-        //    transferIndex++;
-        //}
+        //This function should create a temp list
+        //Remove any element that doesn't have a pokemon
+        //And then return back to a array
+        //This is so we aren't able to click on any empty objects
+        var temp = new List<PartyDisplaySet>(partySlots);
+        for (int i = 0; i < temp.Count - 1; i++)
+        {
+            if (temp[i].partyPokemon.Base == null)
+            {
+                temp.RemoveRange(i, (temp.Count - i));
+                break;
+            }
+        }
+        partySlots = temp.ToArray();
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        //Here, we take in player input to navigate the menu
-        if(Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow))
+        if (!isAnimating) //Make sure we aren't in the middle of aniamting
         {
-            HorizontalInput();
-        }
-        else if(Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            VerticalInput();
-        }
-
-        //We need a way for players to select pokemon and swap
-        if(Input.GetKeyDown(KeyCode.Return))
-        {
-            //Enter swapping mode
-            SwapPokemon();
-            //This if statement should enter us in and out of the Swap faze.
-            //This happens after the swap function, so shouldn't interfere
-            if (!swapStarted)
+            //Here, we take in player input to navigate the menu
+            if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow))
             {
-                swapStarted = true;
+                HorizontalInput();
             }
-            else
+            else if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow))
             {
-                ////Re initialize the array for the display
-                //Init();
-                ////Remove all selected Highlights
-                //foreach(PartyDisplaySet i in partySlots)
-                //{
-                //    i.SetSelectedPokemon(false);
-                //}
-                //swapStarted = false;
+                VerticalInput();
+            }
+
+            //We need a way for players to select pokemon and swap
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                //Enter swapping mode
+                SwapPokemon();
+                //This if statement should enter us in and out of the Swap faze.
+                //This happens after the swap function, so shouldn't interfere
+                if (!swapStarted)
+                {
+                    swapStarted = true;
+                }
             }
         }
    
@@ -109,7 +111,14 @@ public class PartyManager : MonoBehaviour
         {
             if( System.Array.IndexOf(partySlots, i) == selectIndex)
             {
-                i.SetHighlightPokemon(true); //We highlight the pokemon
+                if(isAnimating == false)
+                {
+                    i.SetHighlightPokemon(true); //We highlight the pokemon
+                }
+                else
+                {
+                    i.SetHighlightPokemon(false);
+                }
                 if(swapStarted) //If we are currently selecting a swap
                 {
                     i.SetSelectedPokemon(true); 
@@ -118,7 +127,7 @@ public class PartyManager : MonoBehaviour
             else
             {
                 i.SetHighlightPokemon(false); //We make sure it isn't highlighted
-                if(swapStarted && System.Array.IndexOf(partySlots, i) != swapOneIndex) //If we are swapping and pokemon is not first selected
+                if((swapStarted && System.Array.IndexOf(partySlots, i) != swapOneIndex)) //If we are swapping and pokemon is not first selected
                 {
                     i.SetSelectedPokemon(false);
                 }
@@ -247,6 +256,10 @@ public class PartyManager : MonoBehaviour
 
     IEnumerator SwapAnim()
     {
+        //Turn on isAnimating so player can't interact during animation
+        isAnimating = true;
+        //Turn of the highlight during animation;
+
         //FIRST SLOT
 
         //We first need the in and out positions for both objects
@@ -320,7 +333,9 @@ public class PartyManager : MonoBehaviour
         {
             i.SetSelectedPokemon(false);
         }
+        isAnimating = false;
         swapStarted = false;
+
     }
 
     //Swaps two elements in the GameManager Pokemon list

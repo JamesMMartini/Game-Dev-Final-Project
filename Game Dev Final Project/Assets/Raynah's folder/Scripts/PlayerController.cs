@@ -8,17 +8,25 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed;
     public LayerMask solidObjectsLayer;
     public LayerMask grassLayer;
+    public LayerMask treesLayer;
 
     private bool isMoving;
     private Vector2 input;
 
     GameManager manager;
 
+    private Animator animator;
+
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
+
     private void Start()
     {
         manager = GameManager.gameManager.GetComponent<GameManager>();
 
-        transform.position = manager.saveData.PlayerLocation;
+        //transform.position = manager.saveData.PlayerLocation;
 
         manager.SaveData();
     }
@@ -37,13 +45,19 @@ public class PlayerController : MonoBehaviour
 
             if(input != Vector2.zero)
             {
+                animator.SetFloat("moveX", input.x);
+                animator.SetFloat("moveY", input.y);
+
                 var targetPos = transform.position;
                 targetPos.x += input.x;
                 targetPos.y += input.y;
 
+                if(IsWalkable(targetPos))
                 StartCoroutine(Move(targetPos));
             }
         }
+
+        animator.SetBool("isMoving", isMoving);
     }
 
     IEnumerator Move(Vector3 targetPos)
@@ -63,11 +77,12 @@ public class PlayerController : MonoBehaviour
 
     private bool IsWalkable(Vector3 targetPos)
     {
-        if(Physics2D.OverlapCircle(targetPos, 0.2f, solidObjectsLayer) != null)
+        if(Physics2D.OverlapCircle(targetPos, 0.2f, solidObjectsLayer) != null || Physics2D.OverlapCircle(targetPos, 0f, treesLayer) != null)
         {
             return false;
         }
         return true;
+
     }
 
     private void CheckForEncounters()

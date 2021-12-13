@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     {
         manager = GameManager.gameManager.GetComponent<GameManager>();
 
-        //transform.position = manager.saveData.PlayerLocation;
+        transform.position = manager.saveData.PlayerLocation;
 
         manager.SaveData();
     }

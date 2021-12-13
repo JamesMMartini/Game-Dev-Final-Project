@@ -15,8 +15,8 @@ MonoBehaviour:
   name: Bulbasaur
   description: 
   frontSprite: {fileID: 7518463714919105585, guid: bfe1b413673f0074dbea4c2818c69e5f, type: 3}
-  backSprite: {fileID: 7714351012334146615, guid: 50bbb04bacc664940a04bf5ad9e60fb3, type: 3}
-  type1: 3
+  backSprite: {fileID: 21300000, guid: 9a088b33fec921643b436fe193884ce6, type: 3}
+  type1: 4
   type2: 0
   maxHP: 45
   attack: 49

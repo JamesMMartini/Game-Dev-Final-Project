@@ -171,7 +171,12 @@ public class PauseMenu : MonoBehaviour
         }
         else if (selectedText == "Edit Pokemon")
         {
-
+            //Save the data first
+            GameManager gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+            gameManager.SaveData();
+            //Lets load in the other scene
+            Time.timeScale = 1;
+            SceneManager.LoadScene("InventoryTest");
         }
     }
 }

@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/James/Battle UI Prototype.unity
     guid: e789d347a680ea948a925d3b136377f7
+  - enabled: 1
+    path: Assets/Dylan's Folder/DylanScenes/InventoryTest.unity
+    guid: cf267ebe2365c5847bc81cfbc2685837
   m_configObjects: {}

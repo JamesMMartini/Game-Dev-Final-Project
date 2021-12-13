@@ -15,6 +15,7 @@ public class PauseMenu : MonoBehaviour
     public Color defaultColor;
 
     public PauseManager pauseManager;
+    public GameObject SwapMenu;
 
     // Start is called before the first frame update
     void Start()
@@ -167,6 +168,10 @@ public class PauseMenu : MonoBehaviour
         else if (selectedText == "Resume")
         {
             pauseManager.Resume();
+        }
+        else if (selectedText == "Edit Pokemon")
+        {
+
         }
     }
 }
